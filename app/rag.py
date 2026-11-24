@@ -13,7 +13,9 @@ _collection = _client.get_or_create_collection(
 
 
 def ingest(doc_id: str, text: str, metadata: dict | None = None) -> None:
-    _collection.upsert(ids=[doc_id], documents=[text], metadatas=[metadata or {}])
+    _collection.upsert(
+        ids=[doc_id], documents=[text], metadatas=[metadata or {"source": "ingest"}]
+    )
 
 
 def retrieve(query: str, top_k: int | None = None) -> list[str]:
