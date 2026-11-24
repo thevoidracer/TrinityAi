@@ -6,14 +6,14 @@ class Settings(BaseSettings):
     gateway_api_key: str = "change-me"
 
     # upstream backends
-    anthropic_api_key: str = ""
+    anthropic_api_key: str = ""  # optional; leave blank to run fully free/local
     anthropic_model: str = "claude-sonnet-5-5"
 
     ollama_base_url: str = "http://localhost:11434"
     ollama_model: str = "llama3.1:8b"
 
-    # routing: "claude" (strong, default), "local" (free/offline), "auto" (simple -> local, else claude)
-    default_backend: str = "claude"
+    # routing: "local" (free, default), "claude" (paid, optional), "auto" (simple -> local, else claude)
+    default_backend: str = "local"
 
     # persona injected into every request as the system prompt prefix
     persona: str = (
