@@ -229,6 +229,127 @@
       </div>
     </main>
 
+    <!-- ===== PUBLIC PRICING SECTION (visible before login) ===== -->
+    <section id="publicPricing" class="w-full max-w-4xl mx-auto px-6 py-12">
+      <div class="text-center space-y-3 mb-8">
+        <h2 class="text-2xl sm:text-3xl font-bold text-slate-900">Simple, Transparent Pricing</h2>
+        <p class="text-sm text-slate-500 max-w-lg mx-auto">Start free — upgrade when you're ready for the full toolkit.</p>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
+
+        <!-- FREE PLAN -->
+        <div class="rounded-2xl border-2 border-slate-200 bg-white/80 backdrop-blur p-6 text-left space-y-5 shadow-sm">
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="text-lg">🆓</span>
+              <h3 class="text-lg font-bold text-slate-900">Free</h3>
+            </div>
+            <div class="flex items-baseline gap-1">
+              <span class="text-3xl font-extrabold text-slate-900">$0</span>
+              <span class="text-sm text-slate-400">/ forever</span>
+            </div>
+            <p class="text-xs text-slate-500">Start learning AI for free. No credit card needed.</p>
+          </div>
+
+          <div class="space-y-2.5">
+            <div class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-xs text-slate-700"><strong>70 AI credits per day</strong></span>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-xs text-slate-700">AI Chat with auto model fallback</span>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-xs text-slate-700">Prompt Critic (unlimited)</span>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-xs text-slate-700">Chat history &amp; conversations</span>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-emerald-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-xs text-slate-700">Access to free AI models</span>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-slate-300 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              <span class="text-xs text-slate-400">Lessons &amp; guided learning</span>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-slate-300 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+              <span class="text-xs text-slate-400">Projects, Skills &amp; Coach Mode</span>
+            </div>
+          </div>
+
+          <button onclick="document.getElementById('authEmail').focus(); window.scrollTo({top:0, behavior:'smooth'});"
+            class="w-full py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold text-sm transition cursor-pointer border border-slate-200">
+            Get Started Free
+          </button>
+        </div>
+
+        <!-- PRO PLAN -->
+        <div class="relative rounded-2xl border-2 border-blue-500 bg-gradient-to-b from-blue-50/60 to-white/80 backdrop-blur p-6 text-left space-y-5 shadow-lg shadow-blue-100/50">
+          <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-blue-600 text-white text-[10px] font-bold uppercase tracking-wider shadow-sm">Most Popular</div>
+
+          <div class="space-y-1">
+            <div class="flex items-center gap-2">
+              <span class="text-lg">🚀</span>
+              <h3 class="text-lg font-bold text-slate-900">Pro</h3>
+            </div>
+            <div class="flex items-baseline gap-1">
+              <span class="text-3xl font-extrabold text-blue-700">$9.99</span>
+              <span class="text-sm text-slate-400">/ month</span>
+            </div>
+            <p class="text-xs text-slate-500">Unlock every feature. Master AI with the full toolkit.</p>
+          </div>
+
+          <div class="space-y-2.5">
+            <div class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-xs text-slate-700"><strong>200 AI credits per day</strong></span>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-xs text-slate-700">Everything in Free, plus:</span>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-xs text-slate-700">📚 Full Lesson Library (all categories)</span>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-xs text-slate-700">📁 Projects &amp; organized workspaces</span>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-xs text-slate-700">⚡ Skills &amp; custom system prompts</span>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-xs text-slate-700">🎨 Built-in Image Generator</span>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-xs text-slate-700">🛠️ Prompt Builder &amp; 🎓 Coach Mode</span>
+            </div>
+            <div class="flex items-start gap-2.5">
+              <svg class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
+              <span class="text-xs text-slate-700">Priority access to premium models</span>
+            </div>
+          </div>
+
+          <button onclick="document.getElementById('authEmail').focus(); switchAuthMode('signup'); window.scrollTo({top:0, behavior:'smooth'});"
+            class="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition cursor-pointer shadow-sm shadow-blue-600/25">
+            Start Free, Upgrade Anytime →
+          </button>
+        </div>
+      </div>
+
+      <p class="text-center text-[11px] text-slate-400 max-w-md mx-auto mt-6">Credits reset daily at midnight. Free models (Llama, Groq) cost 0 credits. Cancel anytime — no commitment.</p>
+    </section>
+
     <footer class="w-full max-w-6xl mx-auto px-6 py-4 text-center text-xs text-slate-400">
       Trinity AI &bull; Account-Isolated Storage &bull; Credible Web Grounding Only
     </footer>
