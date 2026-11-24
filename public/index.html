@@ -4,6 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Trinity AI — Intelligent Workspace</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="description" content="An AI workspace that reads the web and grows sharper every chat. Projects, Skills, image generation, and live research — all in one place." />
+  <meta property="og:title" content="Trinity AI — Intelligent Workspace" />
+  <meta property="og:description" content="Organize deep work into Projects, teach Trinity specialized jobs with Skills, and generate images right in chat. Free to start." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://trinityai-six.vercel.app" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Trinity AI — Intelligent Workspace" />
+  <meta name="twitter:description" content="An AI workspace with live web research, image generation, and custom Skills. Free to start, Pro for $9.99/mo." />
+  <meta name="theme-color" content="#2563eb" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" onerror="console.warn('Supabase CDN blocked, trying fallback...');var s=document.createElement('script');s.src='https://unpkg.com/@supabase/supabase-js@2';s.onerror=function(){console.warn('Supabase unavailable — local-only mode')};document.head.appendChild(s)"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -205,6 +215,7 @@
                 <input id="rememberMeCheck" type="checkbox" checked class="w-4 h-4 rounded border-slate-300 text-blue-600 focus:ring-blue-500" />
                 <span class="text-xs text-slate-600">Keep me signed in on this device</span>
               </label>
+              <button type="button" id="forgotPasswordBtn" onclick="handleForgotPassword()" class="text-xs text-blue-600 hover:underline font-medium cursor-pointer">Forgot password?</button>
             </div>
 
             <button type="submit" id="authSubmitBtn"
@@ -1717,6 +1728,29 @@
       } else {
         inp.type = 'password';
         btn.textContent = 'Show';
+      }
+    }
+
+    async function handleForgotPassword() {
+      const email = document.getElementById('authEmail').value.trim().toLowerCase();
+      if (!email) { showAuthError('Enter your email above, then tap "Forgot password?"'); return; }
+      if (!window.supaClient) { showAuthError('Password reset requires an internet connection.'); return; }
+      const btn = document.getElementById('forgotPasswordBtn');
+      btn.textContent = 'Sending…';
+      btn.disabled = true;
+      try {
+        const { error } = await supaClient.auth.resetPasswordForEmail(email, {
+          redirectTo: window.location.origin
+        });
+        if (error) throw error;
+        showAuthError('✅ Reset link sent! Check your email inbox.');
+        document.getElementById('authErrorBox').classList.remove('bg-red-50', 'border-red-200', 'text-red-700');
+        document.getElementById('authErrorBox').classList.add('bg-emerald-50', 'border-emerald-200', 'text-emerald-700');
+      } catch (err) {
+        showAuthError('Could not send reset email. ' + (err.message || 'Try again later.'));
+      } finally {
+        btn.textContent = 'Forgot password?';
+        btn.disabled = false;
       }
     }
 
