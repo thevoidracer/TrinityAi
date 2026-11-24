@@ -2,6 +2,7 @@ import time
 import uuid
 
 from fastapi import BackgroundTasks, FastAPI, Header, HTTPException
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 from app.config import settings
@@ -51,6 +52,11 @@ def _remember_in_background(claim: str) -> None:
 @app.get("/health")
 def health():
     return {"status": "ok"}
+
+
+@app.get("/")
+def chat_ui():
+    return FileResponse("static/index.html")
 
 
 @app.post("/v1/chat/completions")
