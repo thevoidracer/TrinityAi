@@ -9,8 +9,9 @@ class Settings(BaseSettings):
     anthropic_api_key: str = ""  # optional; leave blank to run fully free/local
     anthropic_model: str = "claude-sonnet-5-5"
 
-    ollama_base_url: str = "http://localhost:11434"
-    ollama_model: str = "llama3.1:8b"
+    local_model_path: str = "models/qwen2.5-7b-instruct-q4_k_m-00001-of-00002.gguf"
+    local_model_ctx: int = 4096
+    local_model_threads: int = 4
 
     # routing: "local" (free, default), "claude" (paid, optional), "auto" (simple -> local, else claude)
     default_backend: str = "local"

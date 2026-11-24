@@ -1,9 +1,23 @@
-import httpx
 from anthropic import Anthropic
+from llama_cpp import Llama
 
 from app.config import settings
 
 _anthropic_client = Anthropic(api_key=settings.anthropic_api_key) if settings.anthropic_api_key else None
+
+_local_llm: Llama | None = None
+
+
+def _get_local_llm() -> Llama:
+    global _local_llm
+    if _local_llm is None:
+        _local_llm = Llama(
+            model_path=settings.local_model_path,
+            n_ctx=settings.local_model_ctx,
+            n_threads=settings.local_model_threads,
+            verbose=False,
+        )
+    return _local_llm
 
 
 def _split_system(messages: list[dict]) -> tuple[str, list[dict]]:
@@ -26,13 +40,9 @@ def call_claude(messages: list[dict], max_tokens: int = 1024) -> str:
 
 
 def call_local(messages: list[dict], max_tokens: int = 1024) -> str:
-    resp = httpx.post(
-        f"{settings.ollama_base_url}/api/chat",
-        json={"model": settings.ollama_model, "messages": messages, "stream": False},
-        timeout=120,
-    )
-    resp.raise_for_status()
-    return resp.json()["message"]["content"]
+    llm = _get_local_llm()
+    resp = llm.create_chat_completion(messages=messages, max_tokens=max_tokens)
+    return resp["choices"][0]["message"]["content"]
 
 
 def route(messages: list[dict], backend: str, max_tokens: int = 1024) -> tuple[str, str]:

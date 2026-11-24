@@ -1,4 +1,5 @@
 import re
+import time
 
 import httpx
 
@@ -14,20 +15,24 @@ def _strip_html(text: str) -> str:
 def web_search(query: str, max_results: int = 4) -> list[dict]:
     """Free, keyless fact lookup against Wikipedia. No bot-blocking, unlike
     scraping a general search engine from a datacenter IP."""
+    headers = {"User-Agent": "TrinityAI-Gateway/1.0 (self-hosted; contact: app owner)"}
+    params = {
+        "action": "query",
+        "list": "search",
+        "srsearch": query,
+        "format": "json",
+        "srlimit": max_results,
+    }
     try:
-        resp = httpx.get(
-            WIKIPEDIA_API,
-            params={
-                "action": "query",
-                "list": "search",
-                "srsearch": query,
-                "format": "json",
-                "srlimit": max_results,
-            },
-            headers={"User-Agent": "TrinityAI-Gateway/1.0 (self-hosted; contact: app owner)"},
-            timeout=15,
-        )
-        resp.raise_for_status()
+        for attempt in range(3):
+            resp = httpx.get(WIKIPEDIA_API, params=params, headers=headers, timeout=15)
+            if resp.status_code == 429:
+                time.sleep(2 * (attempt + 1))
+                continue
+            resp.raise_for_status()
+            break
+        else:
+            return []
         hits = resp.json().get("query", {}).get("search", [])
         return [
             {
