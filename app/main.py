@@ -59,6 +59,11 @@ def chat_ui():
     return FileResponse("static/index.html")
 
 
+@app.get("/browser")
+def browser_chat_ui():
+    return FileResponse("static/browser-chat.html")
+
+
 @app.post("/v1/chat/completions")
 def chat_completions(
     req: ChatRequest,
