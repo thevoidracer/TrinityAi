@@ -127,7 +127,7 @@
       </div>
       <div class="flex items-center gap-2 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-full">
         <span class="w-2 h-2 rounded-full bg-blue-600 live-dot"></span>
-        Live Research &amp; 14 Connectors Ready
+        Live Research &amp; AI Tools Built In
       </div>
     </header>
 
@@ -142,7 +142,7 @@
           An AI workspace that <span class="text-blue-600">reads the web</span> and grows sharper every chat.
         </h1>
         <p class="text-slate-600 text-base sm:text-lg leading-relaxed max-w-xl">
-          Organize deep work into dedicated Projects, teach Trinity specialized jobs with reusable Skills, and connect to 14 AI and workspace tools without unverified noise.
+          Organize deep work into dedicated Projects, teach Trinity specialized jobs with reusable Skills, and generate images right in chat without unverified noise.
         </p>
 
         <!-- Clean Capability Pills -->
@@ -152,8 +152,8 @@
             <p class="text-xs text-slate-500">Multi-source search &amp; live page reader with verified citations.</p>
           </div>
           <div class="p-3.5 rounded-xl bg-white border border-slate-200 shadow-xs">
-            <div class="text-blue-600 font-semibold text-sm mb-1">14 Connectors</div>
-            <p class="text-xs text-slate-500">Link Claude, Gemini, Higgsfield, Runway, GitHub &amp; Notion.</p>
+            <div class="text-blue-600 font-semibold text-sm mb-1">Built-in Image Generator</div>
+            <p class="text-xs text-slate-500">Ask Trinity to create any image and it appears inline in chat.</p>
           </div>
           <div class="p-3.5 rounded-xl bg-white border border-slate-200 shadow-xs">
             <div class="text-blue-600 font-semibold text-sm mb-1">Custom Skills</div>
@@ -248,7 +248,7 @@
           </svg>
         </span>
         <span id="liveBannerText" class="text-slate-700 font-medium truncate">
-          Trinity is ready. Research the web, paste a credible URL, or link 14 connectors.
+          Trinity is ready. Research the web, paste a credible URL, or ask for an image.
         </span>
       </div>
 
@@ -293,7 +293,7 @@
       <!-- Mobile Sidebar Backdrop -->
       <div id="sidebarBackdrop" onclick="toggleMobileSidebar(false)" class="hidden fixed inset-0 bg-slate-900/30 z-30 lg:hidden"></div>
 
-      <!-- LEFT SIDEBAR (Clean: New Chat, Chat History, Projects, Skills, Apps) -->
+      <!-- LEFT SIDEBAR (Clean: New Chat, Chat History, Projects, Skills) -->
       <aside id="leftSidebar" class="fixed lg:static inset-y-0 left-0 z-40 w-72 bg-slate-50 border-r border-slate-200 flex flex-col transform -translate-x-full lg:translate-x-0 transition-transform duration-200">
         <!-- Brand & New Chat -->
         <div class="p-4 border-b border-slate-200/80 space-y-3">
@@ -333,9 +333,6 @@
           </button>
           <button id="navTabSkills" onclick="if(isProFeature('skills')){showProGate('skills');return;} switchSidebarSection('skills')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 text-xs font-semibold transition cursor-pointer">
             <span class="text-sm">⚡</span> Skills <span class="pro-lock-inline ml-auto text-[9px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-1.5 rounded-full">PRO</span>
-          </button>
-          <button id="navTabConnectors" onclick="if(isProFeature('connectors')){showProGate('connectors');return;} switchSidebarSection('connectors')" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 text-xs font-semibold transition cursor-pointer">
-            <span class="text-sm">🔌</span> Apps <span class="pro-lock-inline ml-auto text-[9px] font-bold text-amber-600 bg-amber-50 border border-amber-200 px-1.5 rounded-full">PRO</span>
           </button>
 
           <div class="border-t border-slate-200 my-2"></div>
@@ -384,42 +381,6 @@
             <div id="skillsList" class="space-y-2"></div>
           </div>
 
-          <!-- SECTION D: CONNECTORS / APPS SIDEBAR PREVIEW -->
-          <div id="sectionConnectors" class="hidden space-y-2.5">
-            <div class="flex items-center justify-between px-1">
-              <span class="text-[11px] font-semibold uppercase tracking-wider text-slate-400">Connected Apps</span>
-              <button onclick="openConnectorsModal()" class="text-xs font-semibold text-blue-600 hover:text-blue-700 cursor-pointer">
-                Browse 56+
-              </button>
-            </div>
-            <p class="px-1 text-[11px] text-slate-500 leading-relaxed">
-              Link Claude, Gemini, Higgsfield, Runway, GitHub, Notion, and 50+ tools.
-            </p>
-            <div id="sidebarConnectedList" class="space-y-1.5"></div>
-            <button onclick="openConnectorsModal()" class="w-full py-2 px-3 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold text-xs border border-blue-200 transition cursor-pointer">
-              Open Connectors Directory (14)
-            </button>
-          </div>
-        </div>
-
-        <!-- Upgrade / Pricing Link -->
-        <div id="sidebarPricingLink" class="px-3 pb-2">
-          <button onclick="openPricingPage(); toggleMobileSidebar(false);" class="w-full py-2 px-3 rounded-xl bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-semibold text-xs flex items-center justify-center gap-2 shadow-sm transition cursor-pointer">
-            <span>💎</span> View Plans & Pricing
-          </button>
-        </div>
-
-        <!-- Bottom User Profile & Settings -->
-        <div class="p-3 border-t border-slate-200 bg-white flex items-center justify-between gap-2">
-          <div class="flex items-center gap-2.5 min-w-0">
-            <div id="userAvatarBadge" class="w-8 h-8 rounded-full bg-blue-100 text-blue-700 font-bold text-xs flex items-center justify-center shrink-0">
-              U
-            </div>
-            <div class="min-w-0">
-              <div id="userDisplayName" class="text-xs font-semibold text-slate-900 truncate">User</div>
-              <div id="userSubLabel" class="text-[11px] text-slate-400 truncate">Local Account</div>
-            </div>
-          </div>
           <div class="flex items-center gap-1">
             <button onclick="openSettingsModal()" class="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-800 transition cursor-pointer" title="Settings & API Key">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
@@ -498,7 +459,7 @@
                     </div>
                     <div class="flex items-start gap-2.5">
                       <svg class="w-4 h-4 text-slate-300 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
-                      <span class="text-xs text-slate-400">Projects, Skills & Connectors</span>
+                      <span class="text-xs text-slate-400">Projects & Skills</span>
                     </div>
                     <div class="flex items-start gap-2.5">
                       <svg class="w-4 h-4 text-slate-300 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -551,7 +512,7 @@
                     </div>
                     <div class="flex items-start gap-2.5">
                       <svg class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                      <span class="text-xs text-slate-700">🔌 14 App Connectors</span>
+                      <span class="text-xs text-slate-700">🎨 Built-in Image Generator</span>
                     </div>
                     <div class="flex items-start gap-2.5">
                       <svg class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
@@ -614,7 +575,7 @@
                 <div class="space-y-1.5 text-xs text-slate-600">
                   <div class="flex items-center gap-2"><span class="text-blue-500">✓</span> 200 AI credits per day</div>
                   <div class="flex items-center gap-2"><span class="text-blue-500">✓</span> Full Lesson Library</div>
-                  <div class="flex items-center gap-2"><span class="text-blue-500">✓</span> Projects, Skills & Connectors</div>
+                  <div class="flex items-center gap-2"><span class="text-blue-500">✓</span> Projects & Skills</div>
                   <div class="flex items-center gap-2"><span class="text-blue-500">✓</span> Prompt Builder & Coach Mode</div>
                   <div class="flex items-center gap-2"><span class="text-blue-500">✓</span> Cancel anytime</div>
                 </div>
@@ -743,13 +704,6 @@
                     <span id="webResearchLabel">Web Research: ON</span>
                   </button>
 
-                  <!-- Active Connectors Pill -->
-                  <button type="button" onclick="openConnectorsModal()" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 hover:bg-blue-50 border border-slate-200 text-xs font-medium text-slate-600 hover:text-blue-700 transition cursor-pointer">
-                    <svg class="w-3.5 h-3.5 text-blue-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
-                    </svg>
-                    <span>Connectors (<strong id="composerConnectedCount">0</strong>)</span>
-                  </button>
 
                   <span id="urlDetectedTag" class="hidden inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-semibold">
                     URL Detected &bull; Live Reader Ready
@@ -969,68 +923,6 @@
       <div class="flex justify-end gap-2 pt-2">
         <button onclick="closeModal('settingsModal')" class="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 cursor-pointer">Close</button>
         <button onclick="saveSettings()" class="px-4 py-2 rounded-xl text-xs font-semibold bg-blue-600 hover:bg-blue-700 text-white cursor-pointer">Save Settings</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- 14 CONNECTORS & INTEGRATIONS HUB MODAL -->
-  <div id="connectorsModal" class="hidden fixed inset-0 z-50 bg-slate-900/45 flex items-center justify-center p-3 sm:p-5">
-    <div class="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-4xl w-full max-h-[88vh] flex flex-col overflow-hidden">
-      <!-- Modal Header -->
-      <div class="px-6 py-4 border-b border-slate-200 flex items-center justify-between bg-slate-50/70">
-        <div class="flex items-center gap-3">
-          <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1"/>
-            </svg>
-          </div>
-          <div>
-            <h3 class="font-bold text-base text-slate-900">Trinity Connectors Hub <span class="text-xs font-semibold text-blue-600 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full ml-1">14 Integrations</span></h3>
-            <p class="text-xs text-slate-500">Connect Claude, Gemini, Higgsfield, video/audio generators, dev clouds, and workspace apps.</p>
-          </div>
-        </div>
-        <button onclick="closeModal('connectorsModal')" class="text-slate-400 hover:text-slate-700 text-2xl leading-none cursor-pointer">&times;</button>
-      </div>
-
-      <!-- Search & Category Filter Bar -->
-      <div class="px-6 py-3 border-b border-slate-100 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between bg-white">
-        <input id="connectorSearchInput" type="text" oninput="renderConnectorsGrid()" placeholder="Search 14 connectors (e.g., Google Docs, Slides, Sheets, Drive, Gemini, Claude, Higgsfield)..."
-          class="flex-1 px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:outline-none focus:border-blue-600" />
-        <div id="connectorCategoryTabs" class="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0 text-xs font-semibold">
-          <button onclick="setConnectorCategory('All')" class="conn-cat-btn px-3 py-1.5 rounded-lg bg-blue-600 text-white cursor-pointer shrink-0" data-cat="All">All (14)</button>
-          <button onclick="setConnectorCategory('Google Suite')" class="conn-cat-btn px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer shrink-0" data-cat="Google Suite">Google Suite (5)</button>
-          <button onclick="setConnectorCategory('AI Models')" class="conn-cat-btn px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer shrink-0" data-cat="AI Models">AI Models (7)</button>
-          <button onclick="setConnectorCategory('Video & Media')" class="conn-cat-btn px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer shrink-0" data-cat="Video & Media">Video &amp; Media (1)</button>
-          <button onclick="setConnectorCategory('Dev & Cloud')" class="conn-cat-btn px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer shrink-0" data-cat="Dev & Cloud">Dev &amp; Cloud (1)</button>
-        </div>
-      </div>
-
-      <!-- One-Click Google Ecosystem Connect Banner -->
-      <div class="px-6 py-2.5 bg-blue-50/80 border-b border-blue-100 flex flex-wrap items-center justify-between gap-2 text-xs">
-        <div class="flex items-center gap-2 text-blue-900">
-          <span class="w-5 h-5 rounded-md bg-white border border-blue-200 font-bold text-blue-600 flex items-center justify-center text-[11px]">G</span>
-          <span><strong>Google Workspace &amp; Gemini Ecosystem:</strong> Connect Docs, Slides, Sheets, Drive &amp; Gemini in one click.</span>
-        </div>
-        <button onclick="connectAllGoogleApps()" class="px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[11px] shadow-2xs cursor-pointer transition">
-          Connect All Google Apps (5)
-        </button>
-      </div>
-
-      <!-- Connectors Grid -->
-      <div id="connectorsGrid" class="flex-1 overflow-y-auto p-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 bg-slate-50/40"></div>
-
-      <!-- Inline Connector Credential Config Drawer -->
-      <div id="connectorConfigBar" class="hidden px-6 py-4 bg-white border-t border-slate-200 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-        <div class="min-w-0">
-          <div id="configConnectorTitle" class="font-bold text-xs text-slate-900">Configure Connector</div>
-          <div id="configConnectorDesc" class="text-[11px] text-slate-500 truncate">Add an optional API key or OAuth token to link this service.</div>
-        </div>
-        <div class="flex items-center gap-2 shrink-0">
-          <input id="connectorSecretInput" type="password" placeholder="API Key / OAuth Token (optional)"
-            class="px-3 py-1.5 rounded-xl border border-slate-300 text-xs focus:outline-none focus:border-blue-600 w-56" />
-          <button onclick="saveConnectorSecret()" class="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold cursor-pointer">Save &amp; Connect</button>
-          <button onclick="document.getElementById('connectorConfigBar').classList.add('hidden')" class="px-2.5 py-1.5 rounded-xl text-xs text-slate-500 hover:bg-slate-100 cursor-pointer">Cancel</button>
-        </div>
       </div>
     </div>
   </div>
@@ -1264,31 +1156,6 @@
       'quora.com', 'reddit.com', 'answers.yahoo.com', 'wikihow.com'
     ];
 
-    // 14 Connectors with real backend integrations
-    const CONNECTORS_CATALOG = [
-      // Google Suite & Gemini (5)
-      { id: 'gemini', name: 'Google Gemini', cat: 'Google Suite', badge: 'GM', isGoogle: true, desc: 'Gemini 2.5 Pro/Flash multimodal & Search grounding' },
-      { id: 'gdocs', name: 'Google Docs', cat: 'Google Suite', badge: 'DC', isGoogle: true, desc: 'Read, draft, outline & export directly to Google Docs' },
-      { id: 'gslides', name: 'Google Slides', cat: 'Google Suite', badge: 'SL', isGoogle: true, desc: 'Generate slide decks, speaker notes & presentation outlines' },
-      { id: 'gsheets', name: 'Google Sheets', cat: 'Google Suite', badge: 'SH', isGoogle: true, desc: 'Analyze tables, formulas, CSV data & live spreadsheets' },
-      { id: 'gdrive', name: 'Google Drive', cat: 'Google Suite', badge: 'GD', isGoogle: true, desc: 'Search folders, PDFs & cross-reference Drive files' },
-
-      // AI Models (7)
-      { id: 'openai', name: 'OpenAI ChatGPT', cat: 'AI Models', badge: 'OA', desc: 'GPT-4o / o3 reasoning & structured outputs' },
-      { id: 'claude', name: 'Anthropic Claude', cat: 'AI Models', badge: 'CL', desc: 'Claude Sonnet / Opus reasoning & artifact workflows' },
-      { id: 'mistral', name: 'Mistral AI', cat: 'AI Models', badge: 'MS', desc: 'Mistral Large & Codestral fast European models' },
-      { id: 'deepseek', name: 'DeepSeek R1/V3', cat: 'AI Models', badge: 'DS', desc: 'Chain-of-thought math & code synthesis' },
-      { id: 'groq', name: 'Groq LPU', cat: 'AI Models', badge: 'GQ', desc: 'Ultra-low-latency hardware token inference' },
-      { id: 'openrouter', name: 'OpenRouter', cat: 'AI Models', badge: 'OR', desc: 'Unified router across 100+ frontier models' },
-      { id: 'higgsfield', name: 'Higgsfield AI', cat: 'AI Models', badge: 'HF', desc: 'Cinema-grade AI video generation & camera motion control' },
-
-      // Video, Image & Audio AI (1)
-      { id: 'imggen', name: 'Image Generator', cat: 'Video & Media', badge: '🎨', desc: 'Generate images from text — powered by Pollinations AI (free, no key)', isImgGen: true },
-
-      // Dev & Cloud (1)
-      { id: 'supabase', name: 'Supabase', cat: 'Dev & Cloud', badge: 'SB', desc: 'Postgres database, Auth & cross-device sync' }
-    ];
-
     let authMode = 'signin';
     let currentUser = null;
     let userState = null;
@@ -1298,8 +1165,6 @@
     let routerModeIndex = 0;
     let webResearchEnabled = true;
     let latestGeneratedCode = '';
-    let activeConnectorCategory = 'All';
-    let configuringConnectorId = null;
     let streamAbortFlag = false;
     let advancedModeOpen = false;
     let surveyAnswers = { experience: null, tools: [], goals: [], learningStyle: null };
@@ -1333,7 +1198,7 @@
 
     const TIER_CONFIG = {
       free:  { label: 'Free',  credits: 70,  color: 'slate',  features: ['ai_chat'] },
-      pro:   { label: 'Pro',   credits: 200, color: 'blue',   features: ['ai_chat','lessons','skills','projects','connectors','coach','prompt_builder'] }
+      pro:   { label: 'Pro',   credits: 200, color: 'blue',   features: ['ai_chat','lessons','skills','projects','coach','prompt_builder'] }
     };
 
     // Ordered fallback chain: try best → cheapest → free
@@ -1412,7 +1277,7 @@
     }
 
     function showProGate(featureName) {
-      const names = { lessons: 'Lessons', skills: 'Skills', projects: 'Projects', connectors: 'Connectors', coach: 'Coach Mode', prompt_builder: 'Prompt Builder' };
+      const names = { lessons: 'Lessons', skills: 'Skills', projects: 'Projects', coach: 'Coach Mode', prompt_builder: 'Prompt Builder' };
       const label = names[featureName] || featureName;
       pushNotification(`🔒 ${label} is a Pro feature`, `<span class="underline cursor-pointer" onclick="openPricingPage()">View Plans & Pricing</span> to unlock everything.`, 'warning');
     }
@@ -1907,8 +1772,6 @@
         };
       }
       if (!userState.connectors) userState.connectors = {};
-      // Image Generator is free & keyless — auto-enable for all users
-      if (!userState.connectors.imggen) userState.connectors.imggen = { connected: true, secret: '' };
       if (!('onboarded' in userState)) userState.onboarded = false;
       if (!('lessonProgress' in userState)) userState.lessonProgress = {};
       if (!('tier' in userState)) userState.tier = 'free';
@@ -1921,7 +1784,6 @@
       if (!currentUser) return;
       localStorage.setItem(getStorageKeyForUser(), JSON.stringify(userState));
       updateAdaptiveIQBadge();
-      updateConnectorCounters();
 
       // Debounced cloud sync for Supabase users
       if (supaClient && currentUser?.isCloud && currentUser.supaUser) {
@@ -2000,11 +1862,11 @@
     }
 
     // ---------------------------------------------------------
-    // SIDEBAR NAVIGATION: CHATS | PROJECTS | SKILLS | APPS
+    // SIDEBAR NAVIGATION: CHATS | PROJECTS | SKILLS
     // ---------------------------------------------------------
     function switchSidebarSection(section) {
-      const sidebarSections = ['chats', 'projects', 'skills', 'connectors'];
-      const allTabs = ['chats', 'lessons', 'projects', 'skills', 'connectors'];
+      const sidebarSections = ['chats', 'projects', 'skills'];
+      const allTabs = ['chats', 'lessons', 'projects', 'skills'];
       const inactiveClass = 'w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 text-xs font-semibold transition cursor-pointer';
       const activeClass = 'w-full flex items-center gap-2.5 px-3 py-2 rounded-lg bg-blue-50 text-blue-700 text-xs font-semibold transition cursor-pointer';
       // Reset all tabs to inactive
@@ -2040,11 +1902,9 @@
       renderChatHistory();
       renderProjects();
       renderSkills();
-      renderSidebarConnectors();
       renderNotifications();
       updateAdaptiveIQBadge();
       updateActiveSkillPill();
-      updateConnectorCounters();
     }
 
     function renderChatHistory() {
@@ -2125,143 +1985,8 @@
     }
 
     // ---------------------------------------------------------
-    // CONNECTORS HUB & GOOGLE SUITE EXPORT
+    // GOOGLE SUITE EXPORT
     // ---------------------------------------------------------
-    function updateConnectorCounters() {
-      const connectedCount = Object.values(userState?.connectors || {}).filter(c => c && c.connected).length;
-      const composerBadge = document.getElementById('composerConnectedCount');
-      if (composerBadge) composerBadge.textContent = connectedCount;
-    }
-
-    function renderSidebarConnectors() {
-      const list = document.getElementById('sidebarConnectedList');
-      if (!list) return;
-      const active = CONNECTORS_CATALOG.filter(c => userState.connectors[c.id]?.connected);
-      if (!active.length) {
-        list.innerHTML = `<div class="p-3 rounded-xl border border-dashed border-slate-300 text-[11px] text-slate-400 text-center">No apps connected yet.</div>`;
-        return;
-      }
-      list.innerHTML = active.slice(0, 8).map(c => `
-        <div class="flex items-center justify-between px-2.5 py-1.5 rounded-lg bg-white border border-slate-200 text-xs">
-          <span class="font-medium text-slate-800 truncate">${escapeHtml(c.name)}</span>
-          <span class="w-2 h-2 rounded-full bg-emerald-500 shrink-0"></span>
-        </div>
-      `).join('');
-    }
-
-    function openConnectorsModal() {
-      document.getElementById('connectorConfigBar').classList.add('hidden');
-      renderConnectorsGrid();
-      document.getElementById('connectorsModal').classList.remove('hidden');
-    }
-
-    function setConnectorCategory(cat) {
-      activeConnectorCategory = cat;
-      document.querySelectorAll('.conn-cat-btn').forEach(btn => {
-        if (btn.dataset.cat === cat) {
-          btn.className = 'conn-cat-btn px-3 py-1.5 rounded-lg bg-blue-600 text-white cursor-pointer shrink-0';
-        } else {
-          btn.className = 'conn-cat-btn px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer shrink-0';
-        }
-      });
-      renderConnectorsGrid();
-    }
-
-    function renderConnectorsGrid() {
-      const grid = document.getElementById('connectorsGrid');
-      const query = (document.getElementById('connectorSearchInput')?.value || '').trim().toLowerCase();
-
-      const filtered = CONNECTORS_CATALOG.filter(c => {
-        const matchesCat = activeConnectorCategory === 'All' || c.cat === activeConnectorCategory;
-        const matchesQuery = !query || c.name.toLowerCase().includes(query) || c.desc.toLowerCase().includes(query) || c.cat.toLowerCase().includes(query);
-        return matchesCat && matchesQuery;
-      });
-
-      grid.innerHTML = filtered.map(c => {
-        const state = userState.connectors[c.id] || { connected: false };
-        return `
-          <div class="p-3.5 rounded-xl border ${state.connected ? 'bg-blue-50/60 border-blue-300' : 'bg-white border-slate-200'} flex flex-col justify-between gap-3">
-            <div class="flex items-start gap-2.5">
-              <div class="w-8 h-8 rounded-lg ${c.isGoogle ? 'bg-blue-600 text-white' : 'bg-slate-100 text-slate-700'} font-bold text-xs flex items-center justify-center shrink-0">
-                ${escapeHtml(c.badge)}
-              </div>
-              <div class="min-w-0">
-                <div class="font-semibold text-xs text-slate-900 truncate">${escapeHtml(c.name)}</div>
-                <div class="text-[10px] font-medium text-blue-600">${escapeHtml(c.cat)}</div>
-              </div>
-            </div>
-            <p class="text-[11px] text-slate-500 leading-snug">${escapeHtml(c.desc)}</p>
-            <div class="flex items-center justify-between pt-1 border-t border-slate-100">
-              <button onclick="openConnectorConfig('${c.id}')" class="text-[11px] font-medium text-slate-500 hover:text-blue-600 cursor-pointer">
-                ${state.secret ? 'Key Saved' : 'Configure'}
-              </button>
-              <button onclick="toggleConnector('${c.id}')"
-                class="px-3 py-1 rounded-lg text-[11px] font-semibold cursor-pointer transition ${state.connected ? 'bg-emerald-600 text-white' : 'bg-blue-600 hover:bg-blue-700 text-white'}">
-                ${state.connected ? 'Connected' : 'Connect'}
-              </button>
-            </div>
-          </div>
-        `;
-      }).join('');
-    }
-
-    function toggleConnector(id) {
-      const item = CONNECTORS_CATALOG.find(c => c.id === id);
-      if (!item) return;
-      const prev = userState.connectors[id] || { connected: false, secret: '' };
-      userState.connectors[id] = { ...prev, connected: !prev.connected };
-      persistWorkspaceState();
-      renderConnectorsGrid();
-      renderSidebarConnectors();
-
-      const isOn = userState.connectors[id].connected;
-      const aiModelIds = ['mistral','deepseek','openai','claude','groq'];
-      if (aiModelIds.includes(id)) updateRouterModeLabel();
-      if (isOn && aiModelIds.includes(id)) {
-        pushNotification(`${item.name} connected — AI responses will now route through ${item.name}'s model.`);
-      } else if (isOn && id === 'imggen') {
-        pushNotification(`Image Generator connected — ask Trinity to create any image and it'll appear inline in chat!`);
-      } else {
-        pushNotification(`${item.name} ${isOn ? 'connected' : 'disconnected'}.`);
-      }
-    }
-
-    function connectAllGoogleApps() {
-      CONNECTORS_CATALOG.filter(c => c.isGoogle).forEach(c => {
-        const prev = userState.connectors[c.id] || { secret: '' };
-        userState.connectors[c.id] = { ...prev, connected: true };
-      });
-      persistWorkspaceState();
-      renderConnectorsGrid();
-      renderSidebarConnectors();
-      pushNotification('All 5 Google Workspace & Gemini connectors enabled!');
-    }
-
-    function openConnectorConfig(id) {
-      const item = CONNECTORS_CATALOG.find(c => c.id === id);
-      if (!item) return;
-      configuringConnectorId = id;
-      document.getElementById('configConnectorTitle').textContent = `Configure ${item.name}`;
-      document.getElementById('configConnectorDesc').textContent = item.desc;
-      document.getElementById('connectorSecretInput').value = userState.connectors[id]?.secret || '';
-      document.getElementById('connectorConfigBar').classList.remove('hidden');
-    }
-
-    function saveConnectorSecret() {
-      if (!configuringConnectorId) return;
-      const secret = document.getElementById('connectorSecretInput').value.trim();
-      const item = CONNECTORS_CATALOG.find(c => c.id === configuringConnectorId);
-      userState.connectors[configuringConnectorId] = { connected: true, secret };
-      if (configuringConnectorId === 'gemini' && secret) {
-        userState.apiKey = secret;
-      }
-      persistWorkspaceState();
-      renderConnectorsGrid();
-      renderSidebarConnectors();
-      document.getElementById('connectorConfigBar').classList.add('hidden');
-      pushNotification(`${item ? item.name : 'Connector'} linked and saved.`);
-    }
-
     // ── Google API Integration (prepped — activate by pasting Client ID in Settings) ──
     const GOOGLE_CLIENT_ID = (userState.connectors?.google_oauth?.secret || '').trim();
     let googleAccessToken = null;
@@ -2295,13 +2020,6 @@
           if (resp.access_token) {
             googleAccessToken = resp.access_token;
             pushNotification('Google account connected! You can now create Docs, Sheets & Slides directly.');
-            // Mark all Google connectors as truly connected
-            ['gdocs','gsheets','gslides','gmail','gcal'].forEach(id => {
-              userState.connectors[id] = { ...(userState.connectors[id] || {}), connected: true, liveApi: true };
-            });
-            persistWorkspaceState();
-            renderConnectorsGrid();
-            renderSidebarConnectors();
           }
         }
       });
@@ -2752,26 +2470,6 @@
       return { title: '', author: '', thumbnail: '' };
     }
 
-    // ── AI Model Routing (zero-setup via Pollinations) ──
-    function getConnectedAIModel() {
-      // Only route through non-Google "AI Models" category connectors.
-      // The 'gemini' connector is a Google Suite integration (formatting/export),
-      // NOT an AI model switch — exclude it from routing to avoid 404s.
-      const modelMap = {
-        'mistral': 'mistral',
-        'deepseek': 'deepseek-chat',
-        'openai': 'openai',
-        'claude': 'claude',
-        'groq': 'llama'
-      };
-      // Check only non-Google AI model connectors
-      for (const [connId, pollModel] of Object.entries(modelMap)) {
-        const cat = (CONNECTORS_CATALOG.find(c => c.id === connId) || {}).cat;
-        if (cat === 'AI Models' && userState.connectors[connId]?.connected) return pollModel;
-      }
-      return 'openai'; // default
-    }
-
     function isBlockedDomain(urlStr) {
       try {
         const hostname = new URL(urlStr).hostname.toLowerCase();
@@ -2865,11 +2563,8 @@
         return;
       }
 
-      // Otherwise show Pollinations connector model
-      const model = getConnectedAIModel();
-      const modelNames = { 'mistral': 'Mistral', 'deepseek': 'DeepSeek', 'claude': 'Claude', 'gemini': 'Gemini', 'grok': 'Grok', 'searchgpt': 'Perplexity', 'command-r-plus': 'Cohere', 'llama': 'Llama' };
-      const displayModel = modelNames[model] || (model === 'openai' ? '' : model);
-      label.textContent = displayModel ? `${base} → ${displayModel}` : base;
+      // Default Pollinations model — no suffix
+      label.textContent = base;
     }
 
     function toggleWebResearch() {
@@ -2992,7 +2687,7 @@
         </div>
         <div class="space-y-2">
           <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">How can I help today?</h1>
-          <p class="text-sm text-slate-500 max-w-md mx-auto">Run live multi-source web research, stream answers in real time, or connect Trinity to 14 AI and Google Workspace apps.</p>
+          <p class="text-sm text-slate-500 max-w-md mx-auto">Run live multi-source web research, stream answers in real time, or ask Trinity to generate images right in chat.</p>
         </div>
       `;
       return div;
@@ -3119,7 +2814,6 @@
       // 3. Build System Prompt
       const activeSkills = userState.skills.filter(s => s.active);
       const activeProject = userState.projects.find(p => p.id === activeProjectId);
-      const connectedApps = CONNECTORS_CATALOG.filter(c => userState.connectors[c.id]?.connected).map(c => c.name);
 
       let systemInstructions = `You are Trinity AI, a direct, highly capable AI research & coding assistant with a clean, Claude-like communication style.
 - Answer immediately without filler intros or repeating the user's question.
@@ -3142,16 +2836,8 @@ Learning style: ${p.learningStyle || 'unknown'}.
 If they're "new", default to simpler language and shorter answers. If "experienced", skip the basics.`;
       }
 
-      if (connectedApps.length) {
-        const connectedIds = CONNECTORS_CATALOG.filter(c => userState.connectors[c.id]?.connected).map(c => c.id);
-        let connectorGuide = `\n\n[CONNECTED APPS]: ${connectedApps.join(', ')}.\n`;
-        connectorGuide += `When the user asks you to use a connected app, produce output tailored for that app:\n`;
-        if (connectedIds.includes('gdocs')) connectorGuide += `- Google Docs: Use clear headings (## H2, ### H3), bullet points, and bold for key terms. Structure as a ready-to-paste document.\n`;
-        if (connectedIds.includes('gslides')) connectorGuide += `- Google Slides: Structure as "Slide 1: [Title]\\n- bullet\\n- bullet\\nSpeaker notes: ..." for each slide. Keep 3-5 bullets per slide max.\n`;
-        if (connectedIds.includes('gsheets')) connectorGuide += `- Google Sheets: Output data as a markdown table with | headers | so the user can copy it. Include formulas where useful (e.g., =SUM, =AVERAGE).\n`;
-        if (connectedIds.includes('gmail')) connectorGuide += `- Gmail: When asked to draft an email, format with Subject:, To:, and Body: sections. Keep professional and concise.\n`;
-        if (connectedIds.includes('gcal')) connectorGuide += `- Google Calendar: When planning schedules, output structured events with Title, Date, Time, Duration, and Description fields.\n`;
-        if (connectedIds.includes('imggen')) connectorGuide += `- Image Generator: You can generate images! When the user asks you to create, draw, generate, or visualize an image, include a markdown image tag in your response using this exact format:
+      // Built-in Image Generator (always on)
+      systemInstructions += `\n\n[IMAGE GENERATOR]\n- Image Generator: You can generate images! When the user asks you to create, draw, generate, or visualize an image, include a markdown image tag in your response using this exact format:
 ![descriptive alt text](https://image.pollinations.ai/prompt/ENCODED_PROMPT?width=1024&height=1024&nologo=true&seed=RANDOM_NUMBER)
 Rules for image generation:
 1. Replace ENCODED_PROMPT with a URL-encoded detailed prompt (be vivid and specific — style, lighting, composition, colors).
@@ -3160,12 +2846,9 @@ Rules for image generation:
 4. Adjust width/height for different aspects: 1024x1024 (square), 1024x768 (landscape), 768x1024 (portrait), 1920x1080 (widescreen).
 5. Always describe what you generated after the image tag.
 6. If the user asks for variations, use the same prompt with different seed numbers.
-7. NEVER refuse image requests for normal creative content — you have this capability now.\n`;
-        if (connectedIds.includes('notion')) connectorGuide += `- Notion: Use toggle headings, callout blocks (> 💡), and database-style tables when relevant.\n`;
-        if (connectedIds.includes('github')) connectorGuide += `- GitHub: Format code with proper language fences, suggest commit messages, and structure issues with title/description/labels.\n`;
-        if (connectedIds.includes('slack')) connectorGuide += `- Slack: Keep messages concise. Use *bold* and bullet points. Suggest thread-worthy follow-ups separately.\n`;
-        connectorGuide += `\nWhen your response is formatted for a Google app, END your response with a line: [EXPORT:docs], [EXPORT:slides], [EXPORT:sheets], or [EXPORT:gmail] so Trinity can show the export button. Only include this tag when the content is specifically formatted for that app.`;
-        systemInstructions += connectorGuide;
+7. NEVER refuse image requests for normal creative content — you have this capability now.`;
+      if (getGoogleClientId()) {
+        systemInstructions += `\n\n[GOOGLE EXPORT]\nWhen your response is formatted as a Google Doc, Slides deck, Sheet, or Gmail draft, END your response with a line: [EXPORT:docs], [EXPORT:slides], [EXPORT:sheets], or [EXPORT:gmail] so Trinity can show the export button. Only include this tag when the content is specifically formatted for that app.`;
       }
       if (activeProject && activeProject.context) {
         systemInstructions += `\n\n[ACTIVE PROJECT: ${activeProject.title}]\n${activeProject.context}`;
@@ -3462,8 +3145,8 @@ Rules for image generation:
         return null;
       }
 
-      // Determine which AI model to route to based on connected model connectors
-      const activeModel = getConnectedAIModel();
+      // Default keyless Pollinations model (premium models are selected in Settings)
+      const activeModel = 'openai';
 
       // Tier 1: Pollinations POST (text.pollinations.ai — documented keyless endpoint)
       let r = await tryPost('https://text.pollinations.ai/openai', { model: activeModel, messages: messagesPayload }, `poll-${activeModel}`);
@@ -3530,9 +3213,7 @@ Rules for image generation:
     }
 
     function renderGoogleExportBarHtml(content) {
-      const googleIds = ['gdocs', 'gslides', 'gsheets', 'gdrive', 'gemini'];
-      const anyGoogleConnected = googleIds.some(id => userState?.connectors?.[id]?.connected);
-      if (!anyGoogleConnected) return '';
+      if (!getGoogleClientId()) return '';
       const cleanContent = stripExportTags(content);
       const safePayload = encodeURIComponent(cleanContent);
       const suggested = detectExportType(content);
@@ -3824,7 +3505,7 @@ Rules for image generation:
       } else {
         tiles.classList.add('hidden');
         tiles.classList.remove('grid');
-        toggle.innerHTML = 'Show advanced features (Projects, Connectors, Custom Skills) &darr;';
+        toggle.innerHTML = 'Show advanced features (Projects, Custom Skills) &darr;';
       }
     }
 
