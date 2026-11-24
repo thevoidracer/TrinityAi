@@ -1213,11 +1213,43 @@
       { id: 'meta-llama/llama-3.3-70b-instruct:free', name: 'Llama 70B (free)', cost: 0, provider: 'openrouter' }
     ];
 
-    function getCreditState() {
+    async function getCreditState() {
       const today = new Date().toISOString().slice(0, 10);
       let cs = JSON.parse(localStorage.getItem('trinity_credits') || 'null');
       const tier = userState?.tier || 'free';
       const dailyMax = TIER_CONFIG[tier].credits;
+
+      // Cloud users: fetch from trinity_credits table
+      if (supaClient && currentUser?.isCloud && currentUser.supaUser) {
+        try {
+          const { data, error } = await supaClient
+            .from('trinity_credits')
+            .select('credits_used, credits_limit')
+            .eq('user_id', currentUser.supaUser.id)
+            .eq('date', today)
+            .maybeSingle();
+          if (!error && data) {
+            cs = { date: today, used: data.credits_used, tier };
+            localStorage.setItem('trinity_credits', JSON.stringify(cs));
+            return { ...cs, remaining: Math.max(0, dailyMax - cs.used), dailyMax };
+          } else if (!error && !data) {
+            // No row for today — insert one
+            await supaClient.from('trinity_credits').insert({
+              user_id: currentUser.supaUser.id,
+              date: today,
+              credits_used: 0,
+              credits_limit: dailyMax
+            });
+            cs = { date: today, used: 0, tier };
+            localStorage.setItem('trinity_credits', JSON.stringify(cs));
+            return { ...cs, remaining: dailyMax, dailyMax };
+          }
+        } catch (e) {
+          console.warn('Cloud credits fetch failed, using localStorage:', e);
+        }
+      }
+
+      // Fallback: localStorage for non-cloud users or on error
       if (!cs || cs.date !== today) {
         cs = { date: today, used: 0, tier };
         localStorage.setItem('trinity_credits', JSON.stringify(cs));
@@ -1230,10 +1262,28 @@
       return { ...cs, remaining: Math.max(0, dailyMax - cs.used), dailyMax };
     }
 
-    function deductCredits(amount) {
-      const cs = getCreditState();
+    async function deductCredits(amount) {
+      const cs = await getCreditState();
       cs.used += amount;
       localStorage.setItem('trinity_credits', JSON.stringify({ date: cs.date, used: cs.used, tier: cs.tier }));
+
+      // Cloud users: update trinity_credits row
+      if (supaClient && currentUser?.isCloud && currentUser.supaUser) {
+        try {
+          const today = new Date().toISOString().slice(0, 10);
+          await supaClient
+            .from('trinity_credits')
+            .upsert({
+              user_id: currentUser.supaUser.id,
+              date: today,
+              credits_used: cs.used,
+              credits_limit: cs.dailyMax
+            }, { onConflict: 'user_id,date' });
+        } catch (e) {
+          console.warn('Cloud credits update failed:', e);
+        }
+      }
+
       updateCreditsDisplay();
       return cs;
     }
@@ -1255,8 +1305,8 @@
       return null; // totally out of credits
     }
 
-    function updateCreditsDisplay() {
-      const cs = getCreditState();
+    async function updateCreditsDisplay() {
+      const cs = await getCreditState();
       const el = document.getElementById('creditsBadge');
       if (!el) return;
       const pct = cs.dailyMax > 0 ? (cs.remaining / cs.dailyMax) * 100 : 0;
@@ -1289,6 +1339,15 @@
       updateTierUI();
       updateProLockTags();
       pushNotification(tier === 'pro' ? '⭐ Upgraded to Pro — all features unlocked!' : 'Switched to Free plan.');
+
+      // Sync tier to trinity_users table
+      if (supaClient && currentUser?.isCloud && currentUser.supaUser) {
+        try {
+          supaClient.from('trinity_users').update({ plan: tier }).eq('id', currentUser.supaUser.id);
+        } catch (e) {
+          console.warn('Cloud tier sync failed:', e);
+        }
+      }
     }
 
     function updateProLockTags() {
@@ -1678,7 +1737,39 @@
         }
       }
 
+      // Upsert into trinity_users for cloud users
+      if (supaClient && account.isCloud && currentUser.supaUser) {
+        try {
+          await supaClient.from('trinity_users').upsert({
+            id: currentUser.supaUser.id,
+            email: currentUser.supaUser.email,
+            display_name: account.name,
+            plan: 'free'
+          }, { onConflict: 'id', ignoreDuplicates: false });
+
+          // Fetch the user's plan tier from trinity_users
+          const { data: tuData, error: tuError } = await supaClient
+            .from('trinity_users')
+            .select('plan')
+            .eq('id', currentUser.supaUser.id)
+            .maybeSingle();
+          if (!tuError && tuData && tuData.plan) {
+            // Will be applied after loadUserWorkspaceState sets up userState
+            currentUser._cloudPlan = tuData.plan;
+          }
+        } catch (e) {
+          console.warn('trinity_users upsert/fetch failed:', e);
+        }
+      }
+
       await loadUserWorkspaceState();
+
+      // Apply cloud plan tier if fetched
+      if (currentUser._cloudPlan && userState) {
+        userState.tier = currentUser._cloudPlan;
+        delete currentUser._cloudPlan;
+        persistWorkspaceState();
+      }
 
       document.getElementById('authScreen').classList.add('view-hidden');
       document.getElementById('appWorkspace').classList.remove('view-hidden');
@@ -2752,6 +2843,18 @@
       renderChatHistory();
       persistWorkspaceState();
 
+      // Insert user message into cloud chat history
+      if (supaClient && currentUser?.isCloud && currentUser.supaUser) {
+        try {
+          supaClient.from('trinity_chat_history').insert({
+            user_id: currentUser.supaUser.id,
+            role: 'user',
+            content: text,
+            session_id: activeChatId
+          }); // fire-and-forget
+        } catch (e) { console.warn('Chat history insert failed:', e); }
+      }
+
       const researchId = appendAnimatedResearchBubble('Trinity is researching...');
       let webContextBlock = '';
       let verifiedSources = [];
@@ -2866,7 +2969,7 @@ Rules for image generation:
       }
 
       // ── Credit check & auto-fallback ──
-      const creditState = getCreditState();
+      const creditState = await getCreditState();
       const currentModel = userState.premiumModel || '';
       const modelCost = getModelCost(currentModel);
       let usedFallback = null;
@@ -2897,7 +3000,7 @@ Rules for image generation:
 
       // Deduct credits after successful response
       const finalCost = getModelCost(userState.premiumModel || '');
-      if (finalCost > 0) deductCredits(finalCost);
+      if (finalCost > 0) await deductCredits(finalCost);
 
       // Restore original model if we used a fallback
       if (usedFallback && userState._originalModel) {
@@ -2921,6 +3024,19 @@ Rules for image generation:
       chat.messages.push({ role: 'assistant', content: finalStreamedText, sources: verifiedSources });
       silentlyLearnFromInteraction(text);
       persistWorkspaceState();
+
+      // Insert assistant message into cloud chat history
+      if (supaClient && currentUser?.isCloud && currentUser.supaUser) {
+        try {
+          supaClient.from('trinity_chat_history').insert({
+            user_id: currentUser.supaUser.id,
+            role: 'assistant',
+            content: finalStreamedText,
+            model: userState.premiumModel || '',
+            session_id: activeChatId
+          }); // fire-and-forget
+        } catch (e) { console.warn('Chat history insert failed:', e); }
+      }
 
       const fence = '`' + '`' + '`';
       const htmlRegex = new RegExp(fence + 'html\\s*([\\s\\S]*?)' + fence, 'i');
