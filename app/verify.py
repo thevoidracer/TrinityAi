@@ -24,6 +24,7 @@ def web_search(query: str, max_results: int = 4) -> list[dict]:
                 "format": "json",
                 "srlimit": max_results,
             },
+            headers={"User-Agent": "TrinityAI-Gateway/1.0 (self-hosted; contact: app owner)"},
             timeout=15,
         )
         resp.raise_for_status()
@@ -41,9 +42,9 @@ def web_search(query: str, max_results: int = 4) -> list[dict]:
 
 def verify_claim(claim: str) -> tuple[str, str, list[str]]:
     """Returns (verdict, confidence, sources). verdict in confirmed/contradicted/unconfirmed."""
-    results = web_search(claim)
-    if not results:
-        return "unconfirmed", "low", []
+    results = web_search(claim, max_results=6)
+    if len(results) < 2:
+        return "unconfirmed", "low", [r.get("href", "") for r in results]
 
     snippets = "\n\n".join(f"- {r.get('body', '')} (source: {r.get('href', '')})" for r in results)
     sources = [r.get("href", "") for r in results if r.get("href")]
@@ -52,7 +53,12 @@ def verify_claim(claim: str) -> tuple[str, str, list[str]]:
         {
             "role": "system",
             "content": (
-                "You fact-check a single claim against search results. "
+                "You fact-check a single claim against search results from Wikipedia, "
+                "a crowd-edited source that is usually right but can be wrong or vandalized. "
+                "Be conservative: reply CONFIRMED only if at least two distinct results "
+                "independently support the claim. If only one result supports it, or the "
+                "results disagree with each other, reply UNCONFIRMED. If the results clearly "
+                "contradict the claim, reply CONTRADICTED. "
                 "Reply with exactly one word first: CONFIRMED, CONTRADICTED, or UNCONFIRMED, "
                 "then a short reason on the next line."
             ),
