@@ -810,7 +810,7 @@
         </div>
 
         <!-- Messages Feed -->
-        <div id="messagesContainer" class="flex-1 overflow-y-auto px-4 sm:px-6 py-6 space-y-6">
+        <div id="messagesContainer" class="flex-1 overflow-y-auto px-4 sm:px-6 pt-6 pb-2 space-y-6">
           <!-- Empty Welcome State -->
           <div id="emptyChatHero" class="max-w-2xl mx-auto pt-8 sm:pt-14 text-center space-y-6">
             <div class="w-14 h-14 rounded-2xl bg-blue-600 text-white flex items-center justify-center mx-auto shadow-lg shadow-blue-600/25">
@@ -1317,6 +1317,9 @@
     let webResearchEnabled = true;
     let latestGeneratedCode = '';
     let streamAbortFlag = false;
+    let currentAbortController = null;   // AbortController for in-flight AI fetch
+    let isSendingMessage = false;        // Guard against concurrent sendMessage calls
+    let interruptedMessages = [];        // Messages that were interrupted by a newer message
     let advancedModeOpen = false;
     let surveyAnswers = { experience: null, tools: [], goals: [], learningStyle: null };
     let activeLessonId = null;
@@ -2947,6 +2950,10 @@
 
     function stopStreaming() {
       streamAbortFlag = true;
+      if (currentAbortController) {
+        currentAbortController.abort();
+        currentAbortController = null;
+      }
     }
 
     // ---------------------------------------------------------
@@ -3086,6 +3093,44 @@
       let text = input.value.trim();
       if (!text && !pendingAttachment) return;
 
+      // ── Interrupt any in-flight response ──
+      if (isSendingMessage) {
+        // Abort the current fetch
+        if (currentAbortController) {
+          currentAbortController.abort();
+          currentAbortController = null;
+        }
+        streamAbortFlag = true;
+
+        // Remove any active research bubble
+        document.querySelectorAll('[id^="research_"]').forEach(el => el.remove());
+
+        // Hide stop button, re-enable send
+        const stopBtn = document.getElementById('stopStreamBtn');
+        const sendBtn = document.getElementById('sendBtn');
+        if (stopBtn) stopBtn.classList.add('hidden');
+        if (sendBtn) sendBtn.disabled = false;
+
+        // Track the message that was being processed (last user message in chat)
+        const chat = userState.chats.find(c => c.id === activeChatId);
+        if (chat && chat.messages.length) {
+          // Find the last user message that hasn't been fully answered
+          const lastUserIdx = chat.messages.map((m, i) => m.role === 'user' ? i : -1).filter(i => i >= 0).pop();
+          if (lastUserIdx !== undefined && lastUserIdx >= 0) {
+            const lastUserMsg = chat.messages[lastUserIdx];
+            // Check if the last message in history is an assistant reply to this
+            const hasReply = lastUserIdx < chat.messages.length - 1 && chat.messages[chat.messages.length - 1].role === 'assistant';
+            if (!hasReply) {
+              interruptedMessages.push(lastUserMsg.content);
+            }
+          }
+        }
+
+        // Brief pause for cleanup
+        await new Promise(r => setTimeout(r, 100));
+        isSendingMessage = false;
+      }
+
       if (pendingAttachment) {
         text = (text ? text + '\n\n' : '') + `[Attached file: ${pendingAttachment.name}]\nURL: ${pendingAttachment.url}`;
         clearAttachedFile();
@@ -3095,6 +3140,7 @@
       input.style.height = 'auto';
       document.getElementById('urlDetectedTag').classList.add('hidden');
       streamAbortFlag = false;
+      isSendingMessage = true;
 
       const hero = document.getElementById('emptyChatHero');
       if (hero) hero.remove();
@@ -3264,12 +3310,25 @@ Rules for image generation:
           appendMessageBubble('assistant', '🔒 You\'ve used all your credits for today. Credits reset at midnight, or upgrade to Pro for 200 credits/day. Free models (Groq, Llama) cost 0 credits — switch to one in Settings to keep chatting!');
           chat.messages.push({ role: 'assistant', content: 'Credits exhausted for today. Suggested switching to a free model or upgrading.' });
           persistWorkspaceState();
+          isSendingMessage = false;
           return;
         }
       }
 
       updateResearchStatus(researchId, 'Synthesizing verified response...', 'Streaming output...');
-      const reply = await fetchTrinityAIResponse(systemInstructions, chat.messages);
+      currentAbortController = new AbortController();
+      let reply;
+      try {
+        reply = await fetchTrinityAIResponse(systemInstructions, chat.messages, currentAbortController.signal);
+      } catch (abortErr) {
+        if (abortErr.name === 'AbortError') {
+          removeResearchBubble(researchId);
+          isSendingMessage = false;
+          return; // Silently exit — a newer message is taking over
+        }
+        throw abortErr;
+      }
+      currentAbortController = null;
       removeResearchBubble(researchId);
 
       // Deduct credits after successful response
@@ -3320,9 +3379,23 @@ Rules for image generation:
         document.getElementById('toggleCanvasBtn').classList.remove('hidden');
         openCodeSandbox(latestGeneratedCode);
       }
+
+      isSendingMessage = false;
+
+      // ── Offer to handle interrupted messages ──
+      if (interruptedMessages.length > 0) {
+        const skipped = interruptedMessages.slice();
+        interruptedMessages = [];
+        const plural = skipped.length > 1 ? `${skipped.length} messages` : 'a message';
+        const previews = skipped.map((m, i) => `${i + 1}. "${m.length > 60 ? m.slice(0, 60) + '...' : m}"`).join('\n');
+        const offerText = `⏩ I skipped ${plural} to answer your latest question first:\n${previews}\n\nWould you like me to go back and answer ${skipped.length > 1 ? 'those' : 'that'}?`;
+        appendMessageBubble('assistant', offerText);
+        chat.messages.push({ role: 'assistant', content: offerText });
+        persistWorkspaceState();
+      }
     }
 
-    async function fetchTrinityAIResponse(systemPrompt, history) {
+    async function fetchTrinityAIResponse(systemPrompt, history, signal) {
       const apiKey = ((userState.apiKey || '').trim());
 
       const messages = [
@@ -3345,7 +3418,8 @@ Rules for image generation:
               'HTTP-Referer': location.origin || 'https://thevoidracer.github.io',
               'X-Title': 'Trinity AI'
             },
-            body: JSON.stringify({ model, messages })
+            body: JSON.stringify({ model, messages }),
+            signal
           });
           if (resp.ok) {
             const data = await resp.json();
@@ -3369,7 +3443,8 @@ Rules for image generation:
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${apiKey}`
             },
-            body: JSON.stringify({ model, messages })
+            body: JSON.stringify({ model, messages }),
+            signal
           });
           if (resp.ok) {
             const data = await resp.json();
@@ -3400,7 +3475,8 @@ Rules for image generation:
               max_tokens: 4096,
               system: systemPrompt,
               messages: history.slice(-10).map(m => ({ role: m.role, content: m.content }))
-            })
+            }),
+            signal
           });
           if (resp.ok) {
             const data = await resp.json();
@@ -3424,7 +3500,8 @@ Rules for image generation:
               'Content-Type': 'application/json',
               'Authorization': `Bearer ${apiKey}`
             },
-            body: JSON.stringify({ model, messages, temperature: 0.7 })
+            body: JSON.stringify({ model, messages, temperature: 0.7 }),
+            signal
           });
           if (resp.ok) {
             const data = await resp.json();
@@ -3453,7 +3530,8 @@ Rules for image generation:
               systemInstruction: { parts: [{ text: systemPrompt }] },
               contents: formattedContents,
               tools: [{ google_search: {} }]
-            })
+            }),
+            signal
           });
           if (resp.ok) {
             const data = await resp.json();
@@ -3480,7 +3558,8 @@ Rules for image generation:
               // No model field: let the Edge Function use its own default,
               // so a model swap there (like the 2026-11-24 fix) doesn't
               // require a matching frontend deploy.
-              body: JSON.stringify({ messages })
+              body: JSON.stringify({ messages }),
+              signal
             });
             if (resp.ok) {
               const data = await resp.json();
@@ -3509,7 +3588,8 @@ Rules for image generation:
             const res = await fetch(url, {
               method: 'POST',
               headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(body)
+              body: JSON.stringify(body),
+              signal
             });
             if (res.ok) {
               const ct = res.headers.get('content-type') || '';
@@ -3547,7 +3627,7 @@ Rules for image generation:
       // Tier 2: Pollinations simple GET (most basic — no CORS POST issues)
       try {
         const prompt = encodeURIComponent(systemPrompt + '\n\nUser: ' + lastUserMsg + '\n\nAssistant:');
-        const res = await fetch('https://text.pollinations.ai/' + prompt);
+        const res = await fetch('https://text.pollinations.ai/' + prompt, { signal });
         if (res.ok) { const t = await res.text(); if (t && t.length > 5) return t; }
         else errors.push('poll-GET: HTTP ' + res.status);
       } catch (err) { errors.push('poll-GET: ' + err.message); }
@@ -3556,7 +3636,7 @@ Rules for image generation:
       r = await tryPost('https://gen.pollinations.ai/v1/chat/completions', { model: activeModel, messages: messagesPayload }, `gen-${activeModel}`);
       if (r) return r;
       try {
-        const res = await fetch('https://gen.pollinations.ai/text/' + encodeURIComponent(lastUserMsg));
+        const res = await fetch('https://gen.pollinations.ai/text/' + encodeURIComponent(lastUserMsg), { signal });
         if (res.ok) { const t = await res.text(); if (t && t.length > 5) return t; }
         else errors.push('gen-GET: HTTP ' + res.status);
       } catch (err) { errors.push('gen-GET: ' + err.message); }
