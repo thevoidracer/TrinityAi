@@ -1181,9 +1181,8 @@
       'openai/o3-mini': 5,
       'google/gemini-2.5-pro': 3,
       'deepseek/deepseek-chat': 1,
-      'meta-llama/llama-3.3-70b-instruct:free': 0,
-      'mistralai/mistral-small-3.1-24b-instruct:free': 0,
-      'qwen/qwen3-14b:free': 0,
+      'nvidia/nemotron-3-ultra-550b-a55b:free': 0,
+      'liquid/lfm-3-1.7b:free': 0,
       // OpenAI direct
       'gpt-4o': 5, 'gpt-4o-mini': 2, 'o3-mini': 5,
       // Anthropic direct
@@ -1210,7 +1209,7 @@
       { id: 'deepseek/deepseek-chat', name: 'DeepSeek V3', cost: 1, provider: 'openrouter' },
       { id: 'gemini-2.5-flash', name: 'Gemini Flash (free)', cost: 1, provider: 'gemini' },
       { id: 'llama-3.3-70b-versatile', name: 'Llama 70B (free)', cost: 0, provider: 'groq' },
-      { id: 'meta-llama/llama-3.3-70b-instruct:free', name: 'Llama 70B (free)', cost: 0, provider: 'openrouter' }
+      { id: 'nvidia/nemotron-3-ultra-550b-a55b:free', name: 'Nemotron 3 Ultra 550B (free)', cost: 0, provider: 'openrouter' }
     ];
 
     async function getCreditState() {
@@ -2326,9 +2325,8 @@
           { id: 'openai/o3-mini', name: 'o3-mini (Advanced reasoning)', tier: 'paid' },
           { id: 'google/gemini-2.5-pro', name: 'Gemini 2.5 Pro (1M context)', tier: 'paid' },
           { id: 'deepseek/deepseek-chat', name: 'DeepSeek V3 (Cheap + strong)', tier: 'paid' },
-          { id: 'meta-llama/llama-3.3-70b-instruct:free', name: 'Llama 3.3 70B (FREE)', tier: 'free' },
-          { id: 'mistralai/mistral-small-3.1-24b-instruct:free', name: 'Mistral Small 3.1 (FREE)', tier: 'free' },
-          { id: 'qwen/qwen3-14b:free', name: 'Qwen3 14B (FREE)', tier: 'free' }
+          { id: 'nvidia/nemotron-3-ultra-550b-a55b:free', name: 'Nemotron 3 Ultra 550B (FREE)', tier: 'free' },
+          { id: 'liquid/lfm-3-1.7b:free', name: 'LFM 3 1.7B (FREE, fast)', tier: 'free' }
         ]
       },
       'openai': {
@@ -3062,7 +3060,7 @@ Rules for image generation:
       // ── Path A: OpenRouter key → Claude, GPT-4o, Gemini, Llama, etc. ──
       if (provider === 'openrouter') {
         try {
-          const model = selectedModel || 'meta-llama/llama-3.3-70b-instruct:free';
+          const model = selectedModel || 'nvidia/nemotron-3-ultra-550b-a55b:free';
           const resp = await fetch('https://openrouter.ai/api/v1/chat/completions', {
             method: 'POST',
             headers: {
@@ -3203,10 +3201,10 @@ Rules for image generation:
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${session.access_token}`
               },
-              body: JSON.stringify({
-                model: 'meta-llama/llama-3.3-70b-instruct:free',
-                messages
-              })
+              // No model field: let the Edge Function use its own default,
+              // so a model swap there (like the 2026-11-24 fix) doesn't
+              // require a matching frontend deploy.
+              body: JSON.stringify({ messages })
             });
             if (resp.ok) {
               const data = await resp.json();
