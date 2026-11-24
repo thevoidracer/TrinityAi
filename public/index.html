@@ -127,7 +127,7 @@
       </div>
       <div class="flex items-center gap-2 text-xs font-medium text-blue-700 bg-blue-50 border border-blue-200 px-3 py-1.5 rounded-full">
         <span class="w-2 h-2 rounded-full bg-blue-600 live-dot"></span>
-        Live Research &amp; 56 Connectors Ready
+        Live Research &amp; 14 Connectors Ready
       </div>
     </header>
 
@@ -142,7 +142,7 @@
           An AI workspace that <span class="text-blue-600">reads the web</span> and grows sharper every chat.
         </h1>
         <p class="text-slate-600 text-base sm:text-lg leading-relaxed max-w-xl">
-          Organize deep work into dedicated Projects, teach Trinity specialized jobs with reusable Skills, and connect to 56+ AI and workspace tools without unverified noise.
+          Organize deep work into dedicated Projects, teach Trinity specialized jobs with reusable Skills, and connect to 14 AI and workspace tools without unverified noise.
         </p>
 
         <!-- Clean Capability Pills -->
@@ -152,7 +152,7 @@
             <p class="text-xs text-slate-500">Multi-source search &amp; live page reader with verified citations.</p>
           </div>
           <div class="p-3.5 rounded-xl bg-white border border-slate-200 shadow-xs">
-            <div class="text-blue-600 font-semibold text-sm mb-1">56+ Connectors</div>
+            <div class="text-blue-600 font-semibold text-sm mb-1">14 Connectors</div>
             <p class="text-xs text-slate-500">Link Claude, Gemini, Higgsfield, Runway, GitHub &amp; Notion.</p>
           </div>
           <div class="p-3.5 rounded-xl bg-white border border-slate-200 shadow-xs">
@@ -248,7 +248,7 @@
           </svg>
         </span>
         <span id="liveBannerText" class="text-slate-700 font-medium truncate">
-          Trinity is ready. Research the web, paste a credible URL, or link 56+ connectors.
+          Trinity is ready. Research the web, paste a credible URL, or link 14 connectors.
         </span>
       </div>
 
@@ -397,7 +397,7 @@
             </p>
             <div id="sidebarConnectedList" class="space-y-1.5"></div>
             <button onclick="openConnectorsModal()" class="w-full py-2 px-3 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 font-semibold text-xs border border-blue-200 transition cursor-pointer">
-              Open Connectors Directory (56)
+              Open Connectors Directory (14)
             </button>
           </div>
         </div>
@@ -551,7 +551,7 @@
                     </div>
                     <div class="flex items-start gap-2.5">
                       <svg class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
-                      <span class="text-xs text-slate-700">🔌 56+ App Connectors</span>
+                      <span class="text-xs text-slate-700">🔌 14 App Connectors</span>
                     </div>
                     <div class="flex items-start gap-2.5">
                       <svg class="w-4 h-4 text-blue-500 shrink-0 mt-0.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/></svg>
@@ -973,7 +973,7 @@
     </div>
   </div>
 
-  <!-- 56+ CONNECTORS & INTEGRATIONS HUB MODAL -->
+  <!-- 14 CONNECTORS & INTEGRATIONS HUB MODAL -->
   <div id="connectorsModal" class="hidden fixed inset-0 z-50 bg-slate-900/45 flex items-center justify-center p-3 sm:p-5">
     <div class="bg-white rounded-2xl border border-slate-200 shadow-2xl max-w-4xl w-full max-h-[88vh] flex flex-col overflow-hidden">
       <!-- Modal Header -->
@@ -985,7 +985,7 @@
             </svg>
           </div>
           <div>
-            <h3 class="font-bold text-base text-slate-900">Trinity Connectors Hub <span class="text-xs font-semibold text-blue-600 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full ml-1">56 Integrations</span></h3>
+            <h3 class="font-bold text-base text-slate-900">Trinity Connectors Hub <span class="text-xs font-semibold text-blue-600 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-full ml-1">14 Integrations</span></h3>
             <p class="text-xs text-slate-500">Connect Claude, Gemini, Higgsfield, video/audio generators, dev clouds, and workspace apps.</p>
           </div>
         </div>
@@ -994,15 +994,14 @@
 
       <!-- Search & Category Filter Bar -->
       <div class="px-6 py-3 border-b border-slate-100 flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between bg-white">
-        <input id="connectorSearchInput" type="text" oninput="renderConnectorsGrid()" placeholder="Search 64 connectors (e.g., Google Docs, Slides, Sheets, Drive, Gmail, YouTube, Claude, Higgsfield)..."
+        <input id="connectorSearchInput" type="text" oninput="renderConnectorsGrid()" placeholder="Search 14 connectors (e.g., Google Docs, Slides, Sheets, Drive, Gemini, Claude, Higgsfield)..."
           class="flex-1 px-3.5 py-2 rounded-xl border border-slate-300 text-xs focus:outline-none focus:border-blue-600" />
         <div id="connectorCategoryTabs" class="flex items-center gap-1 overflow-x-auto pb-1 sm:pb-0 text-xs font-semibold">
-          <button onclick="setConnectorCategory('All')" class="conn-cat-btn px-3 py-1.5 rounded-lg bg-blue-600 text-white cursor-pointer shrink-0" data-cat="All">All (64)</button>
-          <button onclick="setConnectorCategory('Google Suite')" class="conn-cat-btn px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer shrink-0" data-cat="Google Suite">Google Suite (14)</button>
-          <button onclick="setConnectorCategory('AI Models')" class="conn-cat-btn px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer shrink-0" data-cat="AI Models">AI Models</button>
-          <button onclick="setConnectorCategory('Video & Media')" class="conn-cat-btn px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer shrink-0" data-cat="Video & Media">Video &amp; Media</button>
-          <button onclick="setConnectorCategory('Dev & Cloud')" class="conn-cat-btn px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer shrink-0" data-cat="Dev & Cloud">Dev &amp; Cloud</button>
-          <button onclick="setConnectorCategory('Workspace')" class="conn-cat-btn px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer shrink-0" data-cat="Workspace">Workspace</button>
+          <button onclick="setConnectorCategory('All')" class="conn-cat-btn px-3 py-1.5 rounded-lg bg-blue-600 text-white cursor-pointer shrink-0" data-cat="All">All (14)</button>
+          <button onclick="setConnectorCategory('Google Suite')" class="conn-cat-btn px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer shrink-0" data-cat="Google Suite">Google Suite (5)</button>
+          <button onclick="setConnectorCategory('AI Models')" class="conn-cat-btn px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer shrink-0" data-cat="AI Models">AI Models (7)</button>
+          <button onclick="setConnectorCategory('Video & Media')" class="conn-cat-btn px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer shrink-0" data-cat="Video & Media">Video &amp; Media (1)</button>
+          <button onclick="setConnectorCategory('Dev & Cloud')" class="conn-cat-btn px-3 py-1.5 rounded-lg bg-slate-100 text-slate-600 hover:bg-slate-200 cursor-pointer shrink-0" data-cat="Dev & Cloud">Dev &amp; Cloud (1)</button>
         </div>
       </div>
 
@@ -1010,10 +1009,10 @@
       <div class="px-6 py-2.5 bg-blue-50/80 border-b border-blue-100 flex flex-wrap items-center justify-between gap-2 text-xs">
         <div class="flex items-center gap-2 text-blue-900">
           <span class="w-5 h-5 rounded-md bg-white border border-blue-200 font-bold text-blue-600 flex items-center justify-center text-[11px]">G</span>
-          <span><strong>Google Workspace &amp; Gemini Ecosystem:</strong> Connect Docs, Slides, Sheets, Drive, Gmail, Calendar, YouTube &amp; Scholar in one click.</span>
+          <span><strong>Google Workspace &amp; Gemini Ecosystem:</strong> Connect Docs, Slides, Sheets, Drive &amp; Gemini in one click.</span>
         </div>
         <button onclick="connectAllGoogleApps()" class="px-3 py-1 rounded-lg bg-blue-600 hover:bg-blue-700 text-white font-semibold text-[11px] shadow-2xs cursor-pointer transition">
-          Connect All Google Apps (14)
+          Connect All Google Apps (5)
         </button>
       </div>
 
@@ -1265,82 +1264,29 @@
       'quora.com', 'reddit.com', 'answers.yahoo.com', 'wikihow.com'
     ];
 
-    // 64 Major AI, Google Ecosystem, Media, Dev & Productivity Connectors
+    // 14 Connectors with real backend integrations
     const CONNECTORS_CATALOG = [
-      // Complete Google Ecosystem & Gemini Extensions (14)
+      // Google Suite & Gemini (5)
       { id: 'gemini', name: 'Google Gemini', cat: 'Google Suite', badge: 'GM', isGoogle: true, desc: 'Gemini 2.5 Pro/Flash multimodal & Search grounding' },
       { id: 'gdocs', name: 'Google Docs', cat: 'Google Suite', badge: 'DC', isGoogle: true, desc: 'Read, draft, outline & export directly to Google Docs' },
       { id: 'gslides', name: 'Google Slides', cat: 'Google Suite', badge: 'SL', isGoogle: true, desc: 'Generate slide decks, speaker notes & presentation outlines' },
       { id: 'gsheets', name: 'Google Sheets', cat: 'Google Suite', badge: 'SH', isGoogle: true, desc: 'Analyze tables, formulas, CSV data & live spreadsheets' },
       { id: 'gdrive', name: 'Google Drive', cat: 'Google Suite', badge: 'GD', isGoogle: true, desc: 'Search folders, PDFs & cross-reference Drive files' },
-      { id: 'gmail', name: 'Gmail', cat: 'Google Suite', badge: 'ML', isGoogle: true, desc: 'Draft emails, summarize threads & triage inbox tasks' },
-      { id: 'gcal', name: 'Google Calendar', cat: 'Google Suite', badge: 'GC', isGoogle: true, desc: 'Schedule planning, deadlines & meeting time blocks' },
-      { id: 'youtube', name: 'YouTube', cat: 'Google Suite', badge: 'YT', isGoogle: true, desc: 'Summarize videos, transcripts & educational channels' },
-      { id: 'gmaps', name: 'Google Maps', cat: 'Google Suite', badge: 'MP', isGoogle: true, desc: 'Places, directions, local research & route planning' },
-      { id: 'gscholar', name: 'Google Scholar', cat: 'Google Suite', badge: 'SC', isGoogle: true, desc: 'Peer-reviewed academic papers, citations & journals' },
-      { id: 'gkeep', name: 'Google Keep', cat: 'Google Suite', badge: 'KP', isGoogle: true, desc: 'Capture quick notes, checklists & study reminders' },
-      { id: 'gforms', name: 'Google Forms', cat: 'Google Suite', badge: 'FM', isGoogle: true, desc: 'Build quizzes, surveys & analyze form responses' },
-      { id: 'gclassroom', name: 'Google Classroom', cat: 'Google Suite', badge: 'CR', isGoogle: true, desc: 'Assignments, rubrics, syllabi & coursework tracking' },
-      { id: 'gmeet', name: 'Google Meet', cat: 'Google Suite', badge: 'MT', isGoogle: true, desc: 'Meeting agendas, action items & call summaries' },
 
-      // Frontier AI Models (13)
-      { id: 'claude', name: 'Anthropic Claude', cat: 'AI Models', badge: 'CL', desc: 'Claude Sonnet / Opus reasoning & artifact workflows' },
+      // AI Models (7)
       { id: 'openai', name: 'OpenAI ChatGPT', cat: 'AI Models', badge: 'OA', desc: 'GPT-4o / o3 reasoning & structured outputs' },
-      { id: 'higgsfield', name: 'Higgsfield AI', cat: 'Video & Media', badge: 'HF', desc: 'Cinema-grade AI video generation & camera motion control' },
-      { id: 'grok', name: 'xAI Grok', cat: 'AI Models', badge: 'GK', desc: 'Real-time X/web pulse & technical reasoning' },
-      { id: 'perplexity', name: 'Perplexity Sonar', cat: 'AI Models', badge: 'PX', desc: 'Deep citation search & live web synthesis' },
+      { id: 'claude', name: 'Anthropic Claude', cat: 'AI Models', badge: 'CL', desc: 'Claude Sonnet / Opus reasoning & artifact workflows' },
       { id: 'mistral', name: 'Mistral AI', cat: 'AI Models', badge: 'MS', desc: 'Mistral Large & Codestral fast European models' },
       { id: 'deepseek', name: 'DeepSeek R1/V3', cat: 'AI Models', badge: 'DS', desc: 'Chain-of-thought math & code synthesis' },
-      { id: 'cohere', name: 'Cohere Command', cat: 'AI Models', badge: 'CH', desc: 'Enterprise RAG & semantic reranking' },
       { id: 'groq', name: 'Groq LPU', cat: 'AI Models', badge: 'GQ', desc: 'Ultra-low-latency hardware token inference' },
-      { id: 'together', name: 'Together AI', cat: 'AI Models', badge: 'TG', desc: 'Open-source Llama & Qwen model cluster' },
       { id: 'openrouter', name: 'OpenRouter', cat: 'AI Models', badge: 'OR', desc: 'Unified router across 100+ frontier models' },
-      { id: 'huggingface', name: 'Hugging Face', cat: 'AI Models', badge: 'HF', desc: 'Open weights, Spaces & Inference Endpoints' },
-      { id: 'ollama', name: 'Ollama Local', cat: 'AI Models', badge: 'OL', desc: 'Local private LLM bridge on your machine' },
+      { id: 'higgsfield', name: 'Higgsfield AI', cat: 'AI Models', badge: 'HF', desc: 'Cinema-grade AI video generation & camera motion control' },
 
-      // Video, Image & Audio AI (14)
+      // Video, Image & Audio AI (1)
       { id: 'imggen', name: 'Image Generator', cat: 'Video & Media', badge: '🎨', desc: 'Generate images from text — powered by Pollinations AI (free, no key)', isImgGen: true },
-      { id: 'runway', name: 'Runway Gen-3', cat: 'Video & Media', badge: 'RW', desc: 'Text/image-to-video & motion brush studio' },
-      { id: 'midjourney', name: 'Midjourney', cat: 'Video & Media', badge: 'MJ', desc: 'Photorealistic & artistic image generation' },
-      { id: 'kling', name: 'Kling AI', cat: 'Video & Media', badge: 'KL', desc: 'High-motion 1080p AI video synthesis' },
-      { id: 'luma', name: 'Luma Dream Machine', cat: 'Video & Media', badge: 'LM', desc: 'Keyframe video & 3D scene capture' },
-      { id: 'pika', name: 'Pika Art', cat: 'Video & Media', badge: 'PK', desc: 'Pikaffects & stylized video generation' },
-      { id: 'sora', name: 'OpenAI Sora', cat: 'Video & Media', badge: 'SR', desc: 'Storyboard & cinematic video generation' },
-      { id: 'elevenlabs', name: 'ElevenLabs', cat: 'Video & Media', badge: '11', desc: 'Lifelike AI voice synthesis & dubbing' },
-      { id: 'suno', name: 'Suno AI', cat: 'Video & Media', badge: 'SN', desc: 'Full-song vocal & instrumental music creation' },
-      { id: 'udio', name: 'Udio', cat: 'Video & Media', badge: 'UD', desc: 'Studio-quality AI music & stem generation' },
-      { id: 'stability', name: 'Stability AI', cat: 'Video & Media', badge: 'ST', desc: 'Stable Diffusion 3.5 & image upscaling' },
-      { id: 'leonardo', name: 'Leonardo AI', cat: 'Video & Media', badge: 'LN', desc: 'Game assets, textures & concept art' },
-      { id: 'ideogram', name: 'Ideogram 2.0', cat: 'Video & Media', badge: 'ID', desc: 'Typography-accurate graphic design & posters' },
-      { id: 'heygen', name: 'HeyGen', cat: 'Video & Media', badge: 'HG', desc: 'AI presenter avatars & video translation' },
 
-      // Dev & Cloud (13)
-      { id: 'github', name: 'GitHub', cat: 'Dev & Cloud', badge: 'GH', desc: 'Repos, pull requests, issues & Actions CI' },
-      { id: 'supabase', name: 'Supabase', cat: 'Dev & Cloud', badge: 'SB', desc: 'Postgres database, Auth & cross-device sync' },
-      { id: 'firebase', name: 'Firebase', cat: 'Dev & Cloud', badge: 'FB', desc: 'Firestore, Hosting & Realtime mobile sync' },
-      { id: 'vercel', name: 'Vercel', cat: 'Dev & Cloud', badge: 'VC', desc: 'Instant frontend deployments & edge functions' },
-      { id: 'netlify', name: 'Netlify', cat: 'Dev & Cloud', badge: 'NT', desc: 'Static web hosting & serverless builds' },
-      { id: 'cloudflare', name: 'Cloudflare', cat: 'Dev & Cloud', badge: 'CF', desc: 'Workers AI, R2 storage & global CDN' },
-      { id: 'gitlab', name: 'GitLab', cat: 'Dev & Cloud', badge: 'GL', desc: 'DevSecOps repositories & CI/CD pipelines' },
-      { id: 'replit', name: 'Replit', cat: 'Dev & Cloud', badge: 'RP', desc: 'Cloud IDE workspaces & instant app hosting' },
-      { id: 'cursor', name: 'Cursor Rules', cat: 'Dev & Cloud', badge: 'CR', desc: 'Sync .cursorrules & multi-file coding context' },
-      { id: 'docker', name: 'Docker Hub', cat: 'Dev & Cloud', badge: 'DK', desc: 'Container registries & compose blueprints' },
-      { id: 'linear', name: 'Linear', cat: 'Dev & Cloud', badge: 'LN', desc: 'Software issue tracking & sprint roadmaps' },
-      { id: 'sentry', name: 'Sentry', cat: 'Dev & Cloud', badge: 'SY', desc: 'Real-time crash telemetry & stack trace triage' },
-      { id: 'postman', name: 'Postman', cat: 'Dev & Cloud', badge: 'PM', desc: 'REST/GraphQL API collections & testing' },
-
-      // Workspace & Productivity (11)
-      { id: 'notion', name: 'Notion', cat: 'Workspace', badge: 'NT', desc: 'Wikis, databases & project knowledge bases' },
-      { id: 'slack', name: 'Slack', cat: 'Workspace', badge: 'SL', desc: 'Channel digests & automated team updates' },
-      { id: 'discord', name: 'Discord', cat: 'Workspace', badge: 'DC', desc: 'Webhook alerts & community bot workflows' },
-      { id: 'm365', name: 'Microsoft 365', cat: 'Workspace', badge: 'MS', desc: 'Word, Excel, Teams & OneDrive files' },
-      { id: 'figma', name: 'Figma', cat: 'Workspace', badge: 'FG', desc: 'Design tokens, frames & UI component specs' },
-      { id: 'zapier', name: 'Zapier', cat: 'Workspace', badge: 'ZP', desc: 'Connect Trinity to 7,000+ automated Zaps' },
-      { id: 'make', name: 'Make (Integromat)', cat: 'Workspace', badge: 'MK', desc: 'Visual multi-step automation scenarios' },
-      { id: 'n8n', name: 'n8n Workflows', cat: 'Workspace', badge: 'N8', desc: 'Self-hosted AI agent webhook pipelines' },
-      { id: 'trello', name: 'Trello', cat: 'Workspace', badge: 'TR', desc: 'Kanban boards, cards & checklists' },
-      { id: 'asana', name: 'Asana', cat: 'Workspace', badge: 'AS', desc: 'Team tasks, milestones & timelines' },
-      { id: 'jira', name: 'Atlassian Jira', cat: 'Workspace', badge: 'JR', desc: 'Agile epics, tickets & release boards' }
+      // Dev & Cloud (1)
+      { id: 'supabase', name: 'Supabase', cat: 'Dev & Cloud', badge: 'SB', desc: 'Postgres database, Auth & cross-device sync' }
     ];
 
     let authMode = 'signin';
@@ -2179,7 +2125,7 @@
     }
 
     // ---------------------------------------------------------
-    // 64+ CONNECTORS HUB & GOOGLE SUITE EXPORT
+    // CONNECTORS HUB & GOOGLE SUITE EXPORT
     // ---------------------------------------------------------
     function updateConnectorCounters() {
       const connectedCount = Object.values(userState?.connectors || {}).filter(c => c && c.connected).length;
@@ -2269,12 +2215,10 @@
       renderSidebarConnectors();
 
       const isOn = userState.connectors[id].connected;
-      const aiModelIds = ['mistral','deepseek','openai','claude','grok','perplexity','cohere','together','huggingface','groq'];
+      const aiModelIds = ['mistral','deepseek','openai','claude','groq'];
       if (aiModelIds.includes(id)) updateRouterModeLabel();
       if (isOn && aiModelIds.includes(id)) {
         pushNotification(`${item.name} connected — AI responses will now route through ${item.name}'s model.`);
-      } else if (isOn && id === 'youtube') {
-        pushNotification(`YouTube connected — paste any video URL to get a full transcript & summary.`);
       } else if (isOn && id === 'imggen') {
         pushNotification(`Image Generator connected — ask Trinity to create any image and it'll appear inline in chat!`);
       } else {
@@ -2290,7 +2234,7 @@
       persistWorkspaceState();
       renderConnectorsGrid();
       renderSidebarConnectors();
-      pushNotification('All 14 Google Workspace & Gemini connectors enabled!');
+      pushNotification('All 5 Google Workspace & Gemini connectors enabled!');
     }
 
     function openConnectorConfig(id) {
@@ -2818,11 +2762,6 @@
         'deepseek': 'deepseek-chat',
         'openai': 'openai',
         'claude': 'claude',
-        'grok': 'qwen',
-        'perplexity': 'searchgpt',
-        'cohere': 'command-r-plus',
-        'together': 'llama',
-        'huggingface': 'llama',
         'groq': 'llama'
       };
       // Check only non-Google AI model connectors
@@ -3053,7 +2992,7 @@
         </div>
         <div class="space-y-2">
           <h1 class="text-2xl sm:text-3xl font-bold text-slate-900">How can I help today?</h1>
-          <p class="text-sm text-slate-500 max-w-md mx-auto">Run live multi-source web research, stream answers in real time, or connect Trinity to 64+ AI and Google Workspace apps.</p>
+          <p class="text-sm text-slate-500 max-w-md mx-auto">Run live multi-source web research, stream answers in real time, or connect Trinity to 14 AI and Google Workspace apps.</p>
         </div>
       `;
       return div;
@@ -3212,7 +3151,6 @@ If they're "new", default to simpler language and shorter answers. If "experienc
         if (connectedIds.includes('gsheets')) connectorGuide += `- Google Sheets: Output data as a markdown table with | headers | so the user can copy it. Include formulas where useful (e.g., =SUM, =AVERAGE).\n`;
         if (connectedIds.includes('gmail')) connectorGuide += `- Gmail: When asked to draft an email, format with Subject:, To:, and Body: sections. Keep professional and concise.\n`;
         if (connectedIds.includes('gcal')) connectorGuide += `- Google Calendar: When planning schedules, output structured events with Title, Date, Time, Duration, and Description fields.\n`;
-        if (connectedIds.includes('youtube')) connectorGuide += `- YouTube: You have REAL transcript access. When the user shares a YouTube URL, the full video transcript is automatically extracted and provided to you. Summarize key points, provide timestamps, answer questions about the video content, and extract actionable insights. If no transcript appears in context, the video may lack captions.\n`;
         if (connectedIds.includes('imggen')) connectorGuide += `- Image Generator: You can generate images! When the user asks you to create, draw, generate, or visualize an image, include a markdown image tag in your response using this exact format:
 ![descriptive alt text](https://image.pollinations.ai/prompt/ENCODED_PROMPT?width=1024&height=1024&nologo=true&seed=RANDOM_NUMBER)
 Rules for image generation:
@@ -3592,7 +3530,7 @@ Rules for image generation:
     }
 
     function renderGoogleExportBarHtml(content) {
-      const googleIds = ['gdocs', 'gslides', 'gsheets', 'gmail', 'gdrive', 'gcal', 'youtube', 'gmaps', 'gscholar', 'gkeep', 'gforms', 'gclassroom', 'gmeet', 'gemini'];
+      const googleIds = ['gdocs', 'gslides', 'gsheets', 'gdrive', 'gemini'];
       const anyGoogleConnected = googleIds.some(id => userState?.connectors?.[id]?.connected);
       if (!anyGoogleConnected) return '';
       const cleanContent = stripExportTags(content);
