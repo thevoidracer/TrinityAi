@@ -3443,40 +3443,29 @@ Rules for image generation:
       const container = document.getElementById('messagesContainer');
       const div = document.createElement('div');
       div.id = id;
-      div.className = 'max-w-3xl mx-auto flex items-center gap-3.5 p-3.5 rounded-2xl bg-blue-50/70 border border-blue-200/80';
+      div.className = 'max-w-3xl mx-auto flex items-center p-1';
       div.innerHTML = `
-        <div class="w-11 h-11 rounded-xl bg-white border border-blue-200 flex items-center justify-center shrink-0 shadow-2xs">
-          <svg class="w-8 h-8 text-blue-600" viewBox="0 0 48 48" fill="none">
-            <g class="trinity-orbit-cw">
-              <ellipse cx="24" cy="24" rx="18" ry="7" stroke="#2563eb" stroke-width="2" stroke-opacity="0.85"/>
-              <circle cx="42" cy="24" r="2.8" fill="#2563eb"/>
-            </g>
-            <g class="trinity-orbit-ccw">
-              <ellipse cx="24" cy="24" rx="18" ry="7" transform="rotate(60 24 24)" stroke="#0284c7" stroke-width="2" stroke-opacity="0.75"/>
-              <circle cx="15" cy="8.4" r="2.6" fill="#0284c7"/>
-            </g>
-            <ellipse cx="24" cy="24" rx="18" ry="7" transform="rotate(120 24 24)" stroke="#93c5fd" stroke-width="1.6"/>
-            <circle class="trinity-core-pulse" cx="24" cy="24" r="4" fill="#2563eb"/>
-          </svg>
-        </div>
-        <div class="min-w-0 flex-1">
-          <div class="research-title text-xs font-bold text-blue-800 truncate">${escapeHtml(statusTitle)}</div>
-          <div class="research-sub text-[11px] text-blue-600/80 truncate mt-0.5">Scanning credible sources &amp; filtering out wikis...</div>
-        </div>
+        <svg class="w-7 h-7 text-blue-600" viewBox="0 0 48 48" fill="none">
+          <g class="trinity-orbit-cw">
+            <ellipse cx="24" cy="24" rx="18" ry="7" stroke="#2563eb" stroke-width="2" stroke-opacity="0.85"/>
+            <circle cx="42" cy="24" r="2.8" fill="#2563eb"/>
+          </g>
+          <g class="trinity-orbit-ccw">
+            <ellipse cx="24" cy="24" rx="18" ry="7" transform="rotate(60 24 24)" stroke="#0284c7" stroke-width="2" stroke-opacity="0.75"/>
+            <circle cx="15" cy="8.4" r="2.6" fill="#0284c7"/>
+          </g>
+          <ellipse cx="24" cy="24" rx="18" ry="7" transform="rotate(120 24 24)" stroke="#93c5fd" stroke-width="1.6"/>
+          <circle class="trinity-core-pulse" cx="24" cy="24" r="4" fill="#2563eb"/>
+        </svg>
       `;
       container.appendChild(div);
       container.scrollTop = container.scrollHeight;
       return id;
     }
 
-    function updateResearchStatus(id, title, sub) {
-      const box = document.getElementById(id);
-      if (!box) return;
-      const t = box.querySelector('.research-title');
-      const s = box.querySelector('.research-sub');
-      if (t && title) t.textContent = title;
-      if (s && sub) s.textContent = sub;
-    }
+    // Status text no longer shown in the UI (icon-only loading indicator),
+    // but kept as a no-op so existing call sites don't need to change.
+    function updateResearchStatus(_id, _title, _sub) {}
 
     function removeResearchBubble(id) {
       const el = document.getElementById(id);
