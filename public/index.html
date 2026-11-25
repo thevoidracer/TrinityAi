@@ -690,20 +690,12 @@
               <!-- Top Context Strip inside Composer -->
               <div class="px-3.5 pt-2.5 pb-1 flex flex-wrap items-center justify-between gap-2 border-b border-slate-100">
                 <div class="flex flex-wrap items-center gap-1.5">
-                  <!-- Agent Router Mode Pill -->
-                  <button type="button" id="routerModeBtn" onclick="cycleRouterMode()" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-blue-50 text-xs font-semibold text-slate-700 hover:text-blue-700 transition cursor-pointer">
-                    <span class="w-2 h-2 rounded-full bg-blue-600"></span>
-                    <span id="routerModeLabel">Auto &bull; Trinity</span>
-                  </button>
-
-                  <!-- Live Web Research Toggle Switch -->
-                  <button type="button" id="webResearchToggleBtn" onclick="toggleWebResearch()" class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-blue-50 border border-blue-200 text-xs font-semibold text-blue-700 hover:bg-blue-100 transition cursor-pointer" title="Toggle live multi-source web research">
-                    <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.2" viewBox="0 0 24 24">
-                      <circle cx="12" cy="12" r="9"/><path d="M3.6 9h16.8M3.6 15h16.8M12 3a14 14 0 010 18M12 3a14 14 0 000 18"/>
-                    </svg>
-                    <span id="webResearchLabel">Web Research: ON</span>
-                  </button>
-
+                  <!-- Mode pill and web-research toggle removed from view per request;
+                       routerModeLabel/webResearchLabel spans + cycleRouterMode()/toggleWebResearch()
+                       kept in the DOM/JS (hidden) so existing logic keyed off their text/state
+                       keeps working at their current defaults (Auto mode, web research on). -->
+                  <span id="routerModeLabel" class="hidden">Auto &bull; Trinity</span>
+                  <span id="webResearchLabel" class="hidden">Web Research: ON</span>
 
                   <span id="urlDetectedTag" class="hidden inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-semibold">
                     URL Detected &bull; Live Reader Ready
@@ -1218,15 +1210,33 @@
       const tier = userState?.tier || 'free';
       const dailyMax = TIER_CONFIG[tier].credits;
 
-      // Cloud users: fetch from trinity_credits table
+      // Cloud users: fetch from trinity_credits table.
+      // Right after sign-in, the Supabase client's auth session can still be
+      // settling, which made this query race and silently fall through to a
+      // stale/empty localStorage value (showing full credits even though
+      // some were already used today). Wait for the session to actually be
+      // ready, and retry once before giving up to the fallback below.
       if (supaClient && currentUser?.isCloud && currentUser.supaUser) {
         try {
-          const { data, error } = await supaClient
-            .from('trinity_credits')
-            .select('credits_used, credits_limit')
-            .eq('user_id', currentUser.supaUser.id)
-            .eq('date', today)
-            .maybeSingle();
+          const { data: sessionData } = await supaClient.auth.getSession();
+          if (!sessionData?.session) {
+            console.warn('Cloud credits: no active session yet, waiting briefly before retry');
+            await new Promise((r) => setTimeout(r, 400));
+          }
+
+          let data, error;
+          for (let attempt = 0; attempt < 2; attempt++) {
+            ({ data, error } = await supaClient
+              .from('trinity_credits')
+              .select('credits_used, credits_limit')
+              .eq('user_id', currentUser.supaUser.id)
+              .eq('date', today)
+              .maybeSingle());
+            if (!error) break;
+            console.warn(`Cloud credits fetch attempt ${attempt + 1} failed:`, error.message);
+            if (attempt === 0) await new Promise((r) => setTimeout(r, 400));
+          }
+
           if (!error && data) {
             cs = { date: today, used: data.credits_used, tier };
             localStorage.setItem('trinity_credits', JSON.stringify(cs));
@@ -1242,9 +1252,11 @@
             cs = { date: today, used: 0, tier };
             localStorage.setItem('trinity_credits', JSON.stringify(cs));
             return { ...cs, remaining: dailyMax, dailyMax };
+          } else {
+            console.warn('Cloud credits fetch failed after retry, falling back to localStorage:', error?.message);
           }
         } catch (e) {
-          console.warn('Cloud credits fetch failed, using localStorage:', e);
+          console.warn('Cloud credits fetch threw, using localStorage:', e);
         }
       }
 
