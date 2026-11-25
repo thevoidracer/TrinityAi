@@ -24,19 +24,12 @@
   a.dl { color: var(--accent); text-decoration: none; font-size: 13px; border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; }
   a.dl:hover { border-color: var(--accent); }
   .loading, .error { color: var(--muted); text-align: center; padding: 40px 0; }
-  .topic-section { margin-bottom: 36px; }
-  .topic-section h2 { font-size: 18px; margin: 0 0 2px; }
-  .topic-section .tdesc { color: var(--muted); font-size: 13px; margin: 0 0 4px; }
-  .topic-section .tcount { color: var(--muted); font-size: 12px; margin: 0 0 14px; }
-  .entry { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; }
-  .entry h3 { font-size: 15px; margin: 0 0 8px; }
-  .entry p { font-size: 14px; line-height: 1.5; margin: 0; color: #d6d6d6; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>Trinity Knowledge Library</h1>
-  <p class="sub">Unlisted page. Everything Trinity has researched so far, in full.</p>
+  <p class="sub">Unlisted page. Click a topic to read what Trinity has researched, and download it as a .md file.</p>
 
   <div class="allbar">
     <a class="dl" href="https://dbtvgwujxeszcrrldjkr.supabase.co/functions/v1/library?all=true&format=md">⬇ Full library (raw)</a>
@@ -44,7 +37,7 @@
     <a class="dl" href="https://dbtvgwujxeszcrrldjkr.supabase.co/functions/v1/library?all=true&format=jsonl">⬇ Full training data (.jsonl)</a>
   </div>
 
-  <div id="topics" class="loading">Loading library...</div>
+  <div id="topics" class="loading">Loading topics...</div>
 </div>
 
 <script>
@@ -53,31 +46,23 @@ const BASE = "https://dbtvgwujxeszcrrldjkr.supabase.co/functions/v1/library";
 async function load() {
   const el = document.getElementById('topics');
   try {
-    const resp = await fetch(`${BASE}?all=true`);
+    const resp = await fetch(BASE);
     const data = await resp.json();
-    if (!data.sections || !data.sections.length) {
+    if (!data.topics || !data.topics.length) {
       el.className = 'error';
       el.textContent = 'No topics yet.';
       return;
     }
     el.className = '';
-    el.innerHTML = data.sections.map(s => {
-      const t = s.topic;
-      const facts = s.facts || [];
-      const entries = facts.length
-        ? facts.map(f => `
-            <div class="entry">
-              <h3>${f.heading}</h3>
-              <p>${f.body}</p>
-            </div>`).join('')
-        : `<p style="color:var(--muted)">Nothing researched here yet.</p>`;
+    el.innerHTML = data.topics.map(t => {
+      const pct = Math.min(100, Math.round((t.fact_count / t.target_count) * 100));
       return `
-        <div class="topic-section">
-          <h2>${t.label}</h2>
-          <p class="tdesc">${t.description || ''}</p>
-          <p class="tcount">${facts.length} / ${t.target_count} entries</p>
-          ${entries}
-        </div>`;
+        <a class="topic" href="/topic_${encodeURIComponent(t.slug)}">
+          <h2>${t.label} <span class="arrow">view →</span></h2>
+          <p class="desc">${t.description || ''}</p>
+          <div class="count">${t.fact_count} / ${t.target_count} facts</div>
+          <div class="bar"><div class="bar-fill" style="width:${pct}%"></div></div>
+        </a>`;
     }).join('');
   } catch (e) {
     el.className = 'error';
