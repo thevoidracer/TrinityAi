@@ -73,6 +73,7 @@ async function load() {
         <div class="links">
           <a class="dl" href="${BASE}?topic=${encodeURIComponent(slug)}&format=md">⬇ Download raw .md</a>
           <a class="dl" href="${BASE}?topic=${encodeURIComponent(slug)}&format=skill">⬇ Download skill .md</a>
+          <a class="dl" href="${BASE}?topic=${encodeURIComponent(slug)}&format=jsonl">⬇ Training data (.jsonl, ${data.training_example_count ?? 0})</a>
         </div>
       </div>`;
 
