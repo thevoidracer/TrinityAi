@@ -12,23 +12,24 @@
   .wrap { max-width: 760px; margin: 0 auto; }
   h1 { font-size: 22px; margin: 0 0 4px; }
   p.sub { color: var(--muted); margin: 0 0 28px; font-size: 14px; }
-  .topic { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
-  .topic h2 { font-size: 16px; margin: 0 0 4px; }
+  a.topic { display: block; background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; text-decoration: none; color: inherit; transition: border-color 0.15s; }
+  a.topic:hover { border-color: var(--accent); }
+  .topic h2 { font-size: 16px; margin: 0 0 4px; display: flex; justify-content: space-between; align-items: baseline; }
+  .topic h2 .arrow { color: var(--muted); font-size: 14px; }
   .topic .desc { color: var(--muted); font-size: 13px; margin: 0 0 10px; }
-  .topic .count { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
-  .bar { height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; margin-bottom: 12px; }
+  .topic .count { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+  .bar { height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; }
   .bar-fill { height: 100%; background: var(--accent); }
-  .links { display: flex; gap: 10px; flex-wrap: wrap; }
+  .allbar { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
   a.dl { color: var(--accent); text-decoration: none; font-size: 13px; border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; }
   a.dl:hover { border-color: var(--accent); }
-  .allbar { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
   .loading, .error { color: var(--muted); text-align: center; padding: 40px 0; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1>Trinity Knowledge Library</h1>
-  <p class="sub">Unlisted page. Everything Trinity has learned, organized by topic, exportable as Markdown.</p>
+  <p class="sub">Unlisted page. Click a topic to read what Trinity has researched, and download it below.</p>
 
   <div class="allbar">
     <a class="dl" href="https://dbtvgwujxeszcrrldjkr.supabase.co/functions/v1/library?all=true&format=md">⬇ Full library (raw)</a>
@@ -55,16 +56,12 @@ async function load() {
     el.innerHTML = data.topics.map(t => {
       const pct = Math.min(100, Math.round((t.fact_count / t.target_count) * 100));
       return `
-        <div class="topic">
-          <h2>${t.label}</h2>
+        <a class="topic" href="library-topic.html?topic=${encodeURIComponent(t.slug)}">
+          <h2>${t.label} <span class="arrow">view →</span></h2>
           <p class="desc">${t.description || ''}</p>
           <div class="count">${t.fact_count} / ${t.target_count} facts</div>
           <div class="bar"><div class="bar-fill" style="width:${pct}%"></div></div>
-          <div class="links">
-            <a class="dl" href="${BASE}?topic=${t.slug}&format=md">⬇ Raw .md</a>
-            <a class="dl" href="${BASE}?topic=${t.slug}&format=skill">⬇ Skill .md</a>
-          </div>
-        </div>`;
+        </a>`;
     }).join('');
   } catch (e) {
     el.className = 'error';

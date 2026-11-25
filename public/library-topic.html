@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Trinity Knowledge Library</title>
+<style>
+  :root { --bg:#0f1115; --panel:#1a1d24; --text:#e8e8e8; --muted:#8a8f98; --accent:#4f8cff; --border:#2a2d35; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; padding:24px 16px 60px; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  a.back { color: var(--muted); text-decoration: none; font-size: 13px; display: inline-block; margin-bottom: 16px; }
+  a.back:hover { color: var(--accent); }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  p.desc { color: var(--muted); margin: 0 0 4px; font-size: 14px; }
+  p.count { color: var(--muted); margin: 0 0 24px; font-size: 12px; }
+  .entry { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin-bottom: 12px; }
+  .entry h3 { font-size: 15px; margin: 0 0 8px; }
+  .entry p { font-size: 14px; line-height: 1.5; margin: 0; color: #d6d6d6; }
+  .downloads { margin-top: 32px; padding-top: 20px; border-top: 1px solid var(--border); }
+  .downloads h2 { font-size: 15px; margin: 0 0 12px; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; }
+  .links { display: flex; gap: 10px; flex-wrap: wrap; }
+  a.dl { color: var(--accent); text-decoration: none; font-size: 13px; border: 1px solid var(--border); border-radius: 8px; padding: 8px 14px; }
+  a.dl:hover { border-color: var(--accent); }
+  .loading, .error { color: var(--muted); text-align: center; padding: 40px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <a class="back" href="library.html">← All topics</a>
+  <div id="content" class="loading">Loading...</div>
+</div>
+
+<script>
+const BASE = "https://dbtvgwujxeszcrrldjkr.supabase.co/functions/v1/library";
+const params = new URLSearchParams(location.search);
+const slug = params.get('topic');
+
+async function load() {
+  const el = document.getElementById('content');
+  if (!slug) {
+    el.className = 'error';
+    el.textContent = 'No topic specified.';
+    return;
+  }
+  try {
+    const resp = await fetch(`${BASE}?topic=${encodeURIComponent(slug)}`);
+    if (!resp.ok) {
+      const err = await resp.json().catch(() => ({}));
+      el.className = 'error';
+      el.textContent = err.error || `Failed to load (HTTP ${resp.status})`;
+      return;
+    }
+    const data = await resp.json();
+    const t = data.topic;
+    const facts = data.facts || [];
+
+    const header = `
+      <h1>${t.label}</h1>
+      <p class="desc">${t.description || ''}</p>
+      <p class="count">${facts.length} / ${t.target_count} entries researched so far</p>`;
+
+    const entries = facts.length
+      ? facts.map(f => `
+          <div class="entry">
+            <h3>${f.heading}</h3>
+            <p>${f.body}</p>
+          </div>`).join('')
+      : `<p style="color:var(--muted)">Nothing researched here yet.</p>`;
+
+    const downloads = `
+      <div class="downloads">
+        <h2>Download this topic</h2>
+        <div class="links">
+          <a class="dl" href="${BASE}?topic=${encodeURIComponent(slug)}&format=md">⬇ Raw .md</a>
+          <a class="dl" href="${BASE}?topic=${encodeURIComponent(slug)}&format=skill">⬇ Skill .md</a>
+        </div>
+      </div>`;
+
+    el.className = '';
+    el.innerHTML = header + entries + downloads;
+  } catch (e) {
+    el.className = 'error';
+    el.textContent = 'Failed to load: ' + e.message;
+  }
+}
+load();
+</script>
+</body>
+</html>
