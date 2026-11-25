@@ -2,7 +2,9 @@
   "buildCommand": "",
   "outputDirectory": "public",
   "framework": null,
-  "rewrites": [],
+  "rewrites": [
+    { "source": "/topic_:slug", "destination": "/topic.html" }
+  ],
   "headers": [
     {
       "source": "/(.*)",

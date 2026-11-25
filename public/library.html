@@ -29,7 +29,7 @@
 <body>
 <div class="wrap">
   <h1>Trinity Knowledge Library</h1>
-  <p class="sub">Unlisted page. Click a topic to read what Trinity has researched, and download it below.</p>
+  <p class="sub">Click a topic to read what Trinity has researched, and download it as a .md file.</p>
 
   <div class="allbar">
     <a class="dl" href="https://dbtvgwujxeszcrrldjkr.supabase.co/functions/v1/library?all=true&format=md">⬇ Full library (raw)</a>
@@ -56,7 +56,7 @@ async function load() {
     el.innerHTML = data.topics.map(t => {
       const pct = Math.min(100, Math.round((t.fact_count / t.target_count) * 100));
       return `
-        <a class="topic" href="library-topic.html?topic=${encodeURIComponent(t.slug)}">
+        <a class="topic" href="/topic_${encodeURIComponent(t.slug)}">
           <h2>${t.label} <span class="arrow">view →</span></h2>
           <p class="desc">${t.description || ''}</p>
           <div class="count">${t.fact_count} / ${t.target_count} facts</div>
