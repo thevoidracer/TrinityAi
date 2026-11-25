@@ -1758,12 +1758,13 @@
       // Upsert into trinity_users for cloud users
       if (supaClient && account.isCloud && currentUser.supaUser) {
         try {
-          await supaClient.from('trinity_users').upsert({
+          const { error: upsertErr } = await supaClient.from('trinity_users').upsert({
             id: currentUser.supaUser.id,
             email: currentUser.supaUser.email,
             display_name: account.name,
             plan: 'free'
           }, { onConflict: 'id', ignoreDuplicates: false });
+          if (upsertErr) console.warn('trinity_users upsert error:', upsertErr.message, upsertErr);
 
           // Fetch the user's plan tier from trinity_users
           const { data: tuData, error: tuError } = await supaClient
