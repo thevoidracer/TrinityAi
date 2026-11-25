@@ -1884,6 +1884,14 @@
       box.classList.remove('hidden');
     }
 
+    function isNetworkError(msg) {
+      if (!msg) return false;
+      const lower = msg.toLowerCase();
+      return lower === 'load error' || lower === 'load failed' || lower === 'failed to fetch'
+        || lower.includes('fetch') || lower.includes('network') || lower.includes('timeout')
+        || lower.includes('abort') || lower.includes('connection');
+    }
+
     async function handleAuthSubmit(e) {
       e.preventDefault();
       const email = document.getElementById('authEmail').value.trim().toLowerCase();
@@ -1897,6 +1905,7 @@
       }
 
       // Supabase cloud auth path (works cross-device)
+      let cloudNetworkFailed = false;
       if (supaClient) {
         try {
           if (authMode === 'signup') {
@@ -1906,9 +1915,9 @@
               options: { data: { name: displayName } }
             });
             if (error) {
-              // If it's a network/load error, fall through to local auth
-              if (error.message === 'load error' || error.message?.includes('fetch') || error.message?.includes('network')) {
+              if (isNetworkError(error.message)) {
                 console.warn('Supabase unreachable, using local auth');
+                cloudNetworkFailed = true;
               } else {
                 showAuthError(error.message); return;
               }
@@ -1925,8 +1934,9 @@
           } else {
             const { data, error } = await supaClient.auth.signInWithPassword({ email, password });
             if (error) {
-              if (error.message === 'load error' || error.message?.includes('fetch') || error.message?.includes('network')) {
+              if (isNetworkError(error.message)) {
                 console.warn('Supabase unreachable, using local auth');
+                cloudNetworkFailed = true;
               } else {
                 showAuthError(error.message); return;
               }
@@ -1942,6 +1952,7 @@
           }
         } catch (err) {
           console.warn('Cloud auth failed, falling back to local:', err.message);
+          cloudNetworkFailed = true;
         }
       }
 
@@ -1952,6 +1963,10 @@
           showAuthError('An account with that username/email already exists. Switch to Sign In.');
           return;
         }
+        if (cloudNetworkFailed) {
+          showAuthError('Could not reach the server. Check your connection and try again.');
+          return;
+        }
         const displayName = nameInput || email.split('@')[0];
         accounts[email] = { email, name: displayName, password, createdAt: Date.now() };
         saveAccounts(accounts);
@@ -1959,7 +1974,11 @@
       } else {
         const existing = accounts[email];
         if (!existing) {
-          showAuthError('Account not found. Click "Create Account" above to register.');
+          if (cloudNetworkFailed) {
+            showAuthError('Could not reach the server. Check your connection and try again.');
+          } else {
+            showAuthError('Account not found. Click "Create Account" above to register.');
+          }
           return;
         }
         if (existing.password !== password) {
