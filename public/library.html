@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Trinity Knowledge Library</title>
+<style>
+  :root { --bg:#0f1115; --panel:#1a1d24; --text:#e8e8e8; --muted:#8a8f98; --accent:#4f8cff; --border:#2a2d35; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; padding:24px 16px 60px; }
+  .wrap { max-width: 760px; margin: 0 auto; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  p.sub { color: var(--muted); margin: 0 0 28px; font-size: 14px; }
+  .topic { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
+  .topic h2 { font-size: 16px; margin: 0 0 4px; }
+  .topic .desc { color: var(--muted); font-size: 13px; margin: 0 0 10px; }
+  .topic .count { font-size: 12px; color: var(--muted); margin-bottom: 12px; }
+  .bar { height: 6px; border-radius: 3px; background: var(--border); overflow: hidden; margin-bottom: 12px; }
+  .bar-fill { height: 100%; background: var(--accent); }
+  .links { display: flex; gap: 10px; flex-wrap: wrap; }
+  a.dl { color: var(--accent); text-decoration: none; font-size: 13px; border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; }
+  a.dl:hover { border-color: var(--accent); }
+  .allbar { display: flex; gap: 10px; margin-bottom: 24px; flex-wrap: wrap; }
+  .loading, .error { color: var(--muted); text-align: center; padding: 40px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Trinity Knowledge Library</h1>
+  <p class="sub">Unlisted page. Everything Trinity has learned, organized by topic, exportable as Markdown.</p>
+
+  <div class="allbar">
+    <a class="dl" href="https://dbtvgwujxeszcrrldjkr.supabase.co/functions/v1/library?all=true&format=md">⬇ Full library (raw)</a>
+    <a class="dl" href="https://dbtvgwujxeszcrrldjkr.supabase.co/functions/v1/library?all=true&format=skill">⬇ Full library (skills)</a>
+  </div>
+
+  <div id="topics" class="loading">Loading topics...</div>
+</div>
+
+<script>
+const BASE = "https://dbtvgwujxeszcrrldjkr.supabase.co/functions/v1/library";
+
+async function load() {
+  const el = document.getElementById('topics');
+  try {
+    const resp = await fetch(BASE);
+    const data = await resp.json();
+    if (!data.topics || !data.topics.length) {
+      el.className = 'error';
+      el.textContent = 'No topics yet.';
+      return;
+    }
+    el.className = '';
+    el.innerHTML = data.topics.map(t => {
+      const pct = Math.min(100, Math.round((t.fact_count / t.target_count) * 100));
+      return `
+        <div class="topic">
+          <h2>${t.label}</h2>
+          <p class="desc">${t.description || ''}</p>
+          <div class="count">${t.fact_count} / ${t.target_count} facts</div>
+          <div class="bar"><div class="bar-fill" style="width:${pct}%"></div></div>
+          <div class="links">
+            <a class="dl" href="${BASE}?topic=${t.slug}&format=md">⬇ Raw .md</a>
+            <a class="dl" href="${BASE}?topic=${t.slug}&format=skill">⬇ Skill .md</a>
+          </div>
+        </div>`;
+    }).join('');
+  } catch (e) {
+    el.className = 'error';
+    el.textContent = 'Failed to load: ' + e.message;
+  }
+}
+load();
+</script>
+</body>
+</html>
