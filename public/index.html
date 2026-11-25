@@ -33,7 +33,12 @@
       height: 100%;
       height: 100dvh;
     }
-    #appWorkspace, #authScreen { height: 100% !important; }
+    #appWorkspace { height: 100% !important; }
+    /* The landing/auth page is taller than one screen (hero, features,
+       pricing, footer). Body overflow is hidden globally so the chat app
+       shell doesn't get an extra scrollable gap, so this page needs to
+       scroll within itself instead of relying on body scroll. */
+    #authScreen { height: 100dvh !important; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 
     code, pre { font-family: 'JetBrains Mono', monospace; }
 
