@@ -24,6 +24,10 @@
   a.dl { color: var(--accent); text-decoration: none; font-size: 13px; border: 1px solid var(--border); border-radius: 8px; padding: 6px 12px; }
   a.dl:hover { border-color: var(--accent); }
   .loading, .error { color: var(--muted); text-align: center; padding: 40px 0; }
+  .section-title { font-size: 13px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--muted); margin: 32px 0 12px; }
+  .done-card { background: var(--panel); border: 1px solid var(--border); border-radius: 12px; padding: 14px 18px; margin-bottom: 10px; }
+  .done-card h3 { font-size: 14px; margin: 0 0 8px; display: flex; align-items: center; gap: 6px; }
+  .done-card .links { display: flex; gap: 10px; flex-wrap: wrap; }
 </style>
 </head>
 <body>
@@ -32,6 +36,7 @@
   <p class="sub">Unlisted page. Click a topic to read what Trinity has researched.</p>
 
   <div id="topics" class="loading">Loading topics...</div>
+  <div id="completedWrap"></div>
 </div>
 
 <script>
@@ -63,7 +68,34 @@ async function load() {
     el.textContent = 'Failed to load: ' + e.message;
   }
 }
+
+// Topics that hit their target get auto-archived (raw/skill/jsonl) the
+// moment they complete -- this lists those stable, ready-for-fine-tuning
+// snapshots separately from the live, still-growing topics above.
+async function loadCompleted() {
+  const wrap = document.getElementById('completedWrap');
+  try {
+    const resp = await fetch(`${BASE}?completed=true`);
+    const data = await resp.json();
+    const items = data.completed || [];
+    if (!items.length) return; // nothing finished yet, say nothing
+    wrap.innerHTML = `<div class="section-title">Ready for training (archived)</div>` +
+      items.map(c => `
+        <div class="done-card">
+          <h3>✓ ${c.topic.label} — ${c.fact_count_at_export} facts</h3>
+          <div class="links">
+            <a class="dl" href="${c.raw_md_url}">⬇ Raw .md</a>
+            <a class="dl" href="${c.skill_md_url}">⬇ Skill .md</a>
+            <a class="dl" href="${c.jsonl_url}">⬇ Training .jsonl</a>
+          </div>
+        </div>`).join('');
+  } catch (e) {
+    console.warn('Failed to load completed datasets:', e);
+  }
+}
+
 load();
+loadCompleted();
 </script>
 </body>
 </html>
