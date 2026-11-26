@@ -102,6 +102,8 @@
       transform-origin: 24px 24px;
       animation: trinityCorePulse 1.6s ease-in-out infinite;
     }
+    .prose-content { overflow-x: hidden; word-break: break-word; }
+    .prose-content pre, .prose-content code { max-width: 100%; }
     .streaming-cursor {
       display: inline-block;
       width: 2px;
@@ -390,7 +392,22 @@
             <div id="skillsList" class="space-y-2"></div>
           </div>
 
-          <div class="flex items-center gap-1">
+          <!-- Sidebar Bottom Actions -->
+          <div class="border-t border-slate-200 mt-2 pt-2 space-y-0.5">
+            <button onclick="openChatHistoryPage(); toggleMobileSidebar(false);" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 text-xs font-semibold transition cursor-pointer">
+              <span class="text-sm">💬</span> Chat History
+            </button>
+            <button id="sidebarPricingLink" onclick="openPricingPage(); toggleMobileSidebar(false);" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 text-xs font-semibold transition cursor-pointer">
+              <span class="text-sm">💎</span> Plans & Pricing
+            </button>
+            <button onclick="openProfilePage(); toggleMobileSidebar(false);" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 text-xs font-semibold transition cursor-pointer">
+              <span class="text-sm">👤</span> Profile
+            </button>
+            <button onclick="openUsagePage(); toggleMobileSidebar(false);" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-slate-600 hover:bg-slate-100 text-xs font-semibold transition cursor-pointer">
+              <span class="text-sm">📊</span> Usage
+            </button>
+          </div>
+          <div class="flex items-center gap-1 pt-1">
             <button onclick="openSettingsModal()" class="p-1.5 rounded-lg text-slate-500 hover:bg-slate-100 hover:text-slate-800 transition cursor-pointer" title="Settings & API Key">
               <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
             </button>
@@ -640,6 +657,228 @@
 
           <!-- Lessons List -->
           <div id="lessonsPageGrid" class="flex-1 overflow-y-auto px-4 py-4 space-y-3"></div>
+        </div>
+
+        <!-- ===== CHAT HISTORY PAGE VIEW (hidden by default) ===== -->
+        <div id="chatHistoryPageView" class="hidden flex-1 flex flex-col overflow-hidden">
+          <div class="h-13 px-4 border-b border-slate-200 flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-2.5">
+              <button onclick="toggleMobileSidebar(true)" class="lg:hidden p-1.5 rounded-lg text-slate-600 hover:bg-slate-100">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+              </button>
+              <h2 class="font-semibold text-sm text-slate-900">💬 Chat History</h2>
+            </div>
+            <button onclick="closeChatHistoryPage()" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-medium text-slate-700 cursor-pointer">← Back to Chat</button>
+          </div>
+
+          <div class="flex-1 overflow-y-auto">
+            <!-- Search & Actions Bar -->
+            <div class="px-4 py-3 border-b border-slate-100 flex items-center gap-2">
+              <div class="flex-1 relative">
+                <svg class="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                <input id="chatHistorySearch" oninput="filterChatHistoryPage()" type="text" placeholder="Search chats..." class="w-full pl-8 pr-3 py-2 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500/30 focus:border-blue-400">
+              </div>
+              <button onclick="startNewChat(true); closeChatHistoryPage();" class="shrink-0 px-3 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-semibold transition cursor-pointer">+ New Chat</button>
+            </div>
+
+            <!-- Chat List -->
+            <div id="chatHistoryPageList" class="px-4 py-3 space-y-1">
+              <p class="text-xs text-slate-400 text-center py-8">No chats yet.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== PROFILE PAGE VIEW (hidden by default) ===== -->
+        <div id="profilePageView" class="hidden flex-1 flex flex-col overflow-hidden">
+          <div class="h-13 px-4 border-b border-slate-200 flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-2.5">
+              <button onclick="toggleMobileSidebar(true)" class="lg:hidden p-1.5 rounded-lg text-slate-600 hover:bg-slate-100">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+              </button>
+              <h2 class="font-semibold text-sm text-slate-900">👤 My Profile</h2>
+            </div>
+            <button onclick="closeProfilePage()" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-medium text-slate-700 cursor-pointer">← Back to Chat</button>
+          </div>
+
+          <div class="flex-1 overflow-y-auto px-4 py-6">
+            <div class="max-w-lg mx-auto space-y-6">
+
+              <!-- Avatar & Name Card -->
+              <div class="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+                <div class="flex items-center gap-4">
+                  <div id="profileAvatar" class="w-16 h-16 rounded-2xl bg-blue-600 text-white flex items-center justify-center text-2xl font-bold shrink-0">?</div>
+                  <div class="min-w-0">
+                    <h3 id="profileDisplayName" class="text-lg font-bold text-slate-900 truncate">User</h3>
+                    <p id="profileEmail" class="text-sm text-slate-500 truncate">Not signed in</p>
+                    <div class="flex items-center gap-2 mt-1.5">
+                      <span id="profileTierBadge" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 uppercase tracking-wider">Free</span>
+                      <span id="profileAccountType" class="text-[10px] font-medium px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100">Cloud</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Learning Profile -->
+              <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-4">
+                <div class="flex items-center justify-between">
+                  <h4 class="font-semibold text-sm text-slate-900">Learning Profile</h4>
+                  <button onclick="document.getElementById('onboardingModal').classList.remove('hidden');" class="text-xs text-blue-600 hover:text-blue-700 font-medium cursor-pointer">Edit</button>
+                </div>
+                <div id="profileLearningInfo" class="space-y-3">
+                  <div class="flex items-center justify-between py-2 border-b border-slate-100">
+                    <span class="text-xs text-slate-500">Experience Level</span>
+                    <span id="profileExperience" class="text-xs font-medium text-slate-800">Not set</span>
+                  </div>
+                  <div class="flex items-center justify-between py-2 border-b border-slate-100">
+                    <span class="text-xs text-slate-500">Learning Style</span>
+                    <span id="profileLearningStyle" class="text-xs font-medium text-slate-800">Not set</span>
+                  </div>
+                  <div class="flex items-center justify-between py-2 border-b border-slate-100">
+                    <span class="text-xs text-slate-500">Tools Used</span>
+                    <span id="profileTools" class="text-xs font-medium text-slate-800">None</span>
+                  </div>
+                  <div class="flex items-center justify-between py-2">
+                    <span class="text-xs text-slate-500">Goals</span>
+                    <span id="profileGoals" class="text-xs font-medium text-slate-800">Not set</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Account Stats -->
+              <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-4">
+                <h4 class="font-semibold text-sm text-slate-900">Account Stats</h4>
+                <div class="grid grid-cols-2 gap-3">
+                  <div class="p-3 rounded-xl bg-blue-50 border border-blue-100 text-center">
+                    <div id="profileTotalChats" class="text-xl font-bold text-blue-700">0</div>
+                    <div class="text-[11px] text-blue-600 mt-0.5">Total Chats</div>
+                  </div>
+                  <div class="p-3 rounded-xl bg-emerald-50 border border-emerald-100 text-center">
+                    <div id="profileTotalMessages" class="text-xl font-bold text-emerald-700">0</div>
+                    <div class="text-[11px] text-emerald-600 mt-0.5">Messages Sent</div>
+                  </div>
+                  <div class="p-3 rounded-xl bg-violet-50 border border-violet-100 text-center">
+                    <div id="profileSkillsCount" class="text-xl font-bold text-violet-700">0</div>
+                    <div class="text-[11px] text-violet-600 mt-0.5">Skills Trained</div>
+                  </div>
+                  <div class="p-3 rounded-xl bg-amber-50 border border-amber-100 text-center">
+                    <div id="profileLearnedFacts" class="text-xl font-bold text-amber-700">0</div>
+                    <div class="text-[11px] text-amber-600 mt-0.5">Facts Learned</div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick Actions -->
+              <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-3">
+                <h4 class="font-semibold text-sm text-slate-900">Quick Actions</h4>
+                <button onclick="closeProfilePage(); openPricingPage();" class="w-full py-2.5 px-4 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-semibold text-left flex items-center gap-2 transition cursor-pointer">
+                  <span>💎</span> View Plans & Pricing
+                </button>
+                <button onclick="closeProfilePage(); openUsagePage();" class="w-full py-2.5 px-4 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-emerald-700 text-xs font-semibold text-left flex items-center gap-2 transition cursor-pointer">
+                  <span>📊</span> View Usage Stats
+                </button>
+                <button onclick="closeProfilePage(); openSettingsModal();" class="w-full py-2.5 px-4 rounded-xl bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold text-left flex items-center gap-2 transition cursor-pointer">
+                  <span>⚙️</span> Workspace Settings
+                </button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- ===== USAGE PAGE VIEW (hidden by default) ===== -->
+        <div id="usagePageView" class="hidden flex-1 flex flex-col overflow-hidden">
+          <div class="h-13 px-4 border-b border-slate-200 flex items-center justify-between shrink-0">
+            <div class="flex items-center gap-2.5">
+              <button onclick="toggleMobileSidebar(true)" class="lg:hidden p-1.5 rounded-lg text-slate-600 hover:bg-slate-100">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+              </button>
+              <h2 class="font-semibold text-sm text-slate-900">📊 Usage</h2>
+            </div>
+            <button onclick="closeUsagePage()" class="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-xs font-medium text-slate-700 cursor-pointer">← Back to Chat</button>
+          </div>
+
+          <div class="flex-1 overflow-y-auto px-4 py-6">
+            <div class="max-w-lg mx-auto space-y-6">
+
+              <!-- Today's Credits -->
+              <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-4">
+                <div class="flex items-center justify-between">
+                  <h4 class="font-semibold text-sm text-slate-900">Today's Credits</h4>
+                  <span id="usageTierLabel" class="text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 uppercase tracking-wider">Free</span>
+                </div>
+                <div class="space-y-2">
+                  <div class="flex justify-between text-sm">
+                    <span class="text-slate-600">Used</span>
+                    <span id="usageCreditsUsed" class="font-bold text-slate-900">0</span>
+                  </div>
+                  <div class="w-full h-3 rounded-full bg-slate-100 overflow-hidden">
+                    <div id="usageCreditBar" class="h-full rounded-full bg-blue-500 transition-all" style="width:0%"></div>
+                  </div>
+                  <div class="flex justify-between text-xs text-slate-400">
+                    <span>0 used</span>
+                    <span id="usageCreditsMax">70 daily limit</span>
+                  </div>
+                </div>
+                <p class="text-[11px] text-slate-400">Credits reset daily at midnight. Free models cost 0 credits.</p>
+              </div>
+
+              <!-- Model Cost Reference -->
+              <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-4">
+                <h4 class="font-semibold text-sm text-slate-900">Credit Costs by Model</h4>
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between py-1.5 border-b border-slate-50">
+                    <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-violet-500"></span><span class="text-xs text-slate-700">Claude Opus 4</span></div>
+                    <span class="text-xs font-bold text-violet-600">10 credits</span>
+                  </div>
+                  <div class="flex items-center justify-between py-1.5 border-b border-slate-50">
+                    <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-blue-500"></span><span class="text-xs text-slate-700">Claude Sonnet 4 / GPT-4o</span></div>
+                    <span class="text-xs font-bold text-blue-600">5 credits</span>
+                  </div>
+                  <div class="flex items-center justify-between py-1.5 border-b border-slate-50">
+                    <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-sky-500"></span><span class="text-xs text-slate-700">Gemini 2.5 Pro</span></div>
+                    <span class="text-xs font-bold text-sky-600">3 credits</span>
+                  </div>
+                  <div class="flex items-center justify-between py-1.5 border-b border-slate-50">
+                    <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-teal-500"></span><span class="text-xs text-slate-700">DeepSeek V3 / Gemini Flash</span></div>
+                    <span class="text-xs font-bold text-teal-600">1 credit</span>
+                  </div>
+                  <div class="flex items-center justify-between py-1.5">
+                    <div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-emerald-500"></span><span class="text-xs text-slate-700">Llama / Groq / Free Models</span></div>
+                    <span class="text-xs font-bold text-emerald-600">0 credits</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Plan Comparison -->
+              <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-4">
+                <h4 class="font-semibold text-sm text-slate-900">Plan Limits</h4>
+                <div class="grid grid-cols-2 gap-3">
+                  <div class="p-4 rounded-xl border-2 border-slate-200 bg-slate-50 text-center space-y-1">
+                    <div class="text-xs font-bold text-slate-600 uppercase tracking-wider">Free</div>
+                    <div class="text-2xl font-extrabold text-slate-800">70</div>
+                    <div class="text-[11px] text-slate-500">credits / day</div>
+                  </div>
+                  <div class="p-4 rounded-xl border-2 border-blue-200 bg-blue-50 text-center space-y-1">
+                    <div class="text-xs font-bold text-blue-600 uppercase tracking-wider">Pro</div>
+                    <div class="text-2xl font-extrabold text-blue-700">200</div>
+                    <div class="text-[11px] text-blue-500">credits / day</div>
+                  </div>
+                </div>
+                <button id="usageUpgradeBtn" onclick="closeUsagePage(); openPricingPage();" class="w-full py-2.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm transition cursor-pointer">
+                  Upgrade to Pro — $9.99/mo
+                </button>
+              </div>
+
+              <!-- Session History -->
+              <div class="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm space-y-4">
+                <h4 class="font-semibold text-sm text-slate-900">Recent Activity</h4>
+                <div id="usageRecentActivity" class="space-y-2">
+                  <p class="text-xs text-slate-400 italic">No activity yet today.</p>
+                </div>
+              </div>
+
+            </div>
+          </div>
         </div>
 
         <!-- ===== CHAT VIEW (shown by default) ===== -->
@@ -3545,7 +3784,7 @@ Rules for image generation:
       const fence = '`' + '`' + '`';
       const codeBlockRegex = new RegExp(fence + '(\\w*)\\n([\\s\\S]*?)' + fence, 'g');
       escaped = escaped.replace(codeBlockRegex, (_, lang, code) => {
-        return `<pre class="p-3.5 rounded-xl bg-slate-900 text-slate-100 text-xs overflow-x-auto my-2"><code>${code}</code></pre>`;
+        return `<pre class="p-3.5 rounded-xl bg-slate-900 text-slate-100 text-xs my-2" style="white-space:pre-wrap;word-break:break-word;overflow-x:hidden;"><code>${code}</code></pre>`;
       });
       escaped = escaped.replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded bg-slate-100 text-blue-700 text-xs">$1</code>');
       escaped = escaped.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-semibold text-slate-900">$1</strong>');
@@ -3801,10 +4040,15 @@ Build them a complete, pro-quality prompt. Respond in this exact format:
     // ---------------------------------------------------------
     let activeLesonFilter = 'all';
 
+    function hideAllPageViews() {
+      ['chatView','lessonsPageView','checkoutPageView','profilePageView','usagePageView','pricingPageView','chatHistoryPageView'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.classList.add('hidden');
+      });
+    }
+
     function openPricingPage() {
-      document.getElementById('chatView').classList.add('hidden');
-      document.getElementById('lessonsPageView').classList.add('hidden');
-      document.getElementById('checkoutPageView').classList.add('hidden');
+      hideAllPageViews();
       document.getElementById('pricingPageView').classList.remove('hidden');
       updatePricingButtons();
     }
@@ -3850,9 +4094,7 @@ Build them a complete, pro-quality prompt. Respond in this exact format:
     const STRIPE_PRICE_ID = 'price_1UeIKfI7mwDDYOTuQHHrtTSW';
 
     function openCheckoutPage() {
-      document.getElementById('chatView').classList.add('hidden');
-      document.getElementById('lessonsPageView').classList.add('hidden');
-      document.getElementById('pricingPageView').classList.add('hidden');
+      hideAllPageViews();
       document.getElementById('checkoutPageView').classList.remove('hidden');
       document.getElementById('checkoutError').classList.add('hidden');
       // Reset button state
@@ -3926,7 +4168,7 @@ Build them a complete, pro-quality prompt. Respond in this exact format:
 
     function openLessonsPage() {
       activeLesonFilter = 'all';
-      document.getElementById('chatView').classList.add('hidden');
+      hideAllPageViews();
       document.getElementById('lessonsPageView').classList.remove('hidden');
       renderLessonsPage();
       updateLessonProgressBadge();
@@ -3936,6 +4178,252 @@ Build them a complete, pro-quality prompt. Respond in this exact format:
       document.getElementById('lessonsPageView').classList.add('hidden');
       document.getElementById('chatView').classList.remove('hidden');
       document.getElementById('chatView').style.display = '';
+    }
+
+    // ---------------------------------------------------------
+    // PROFILE PAGE
+    // ---------------------------------------------------------
+    function openProfilePage() {
+      hideAllPageViews();
+      document.getElementById('profilePageView').classList.remove('hidden');
+      populateProfilePage();
+    }
+
+    function closeProfilePage() {
+      document.getElementById('profilePageView').classList.add('hidden');
+      document.getElementById('chatView').classList.remove('hidden');
+      document.getElementById('chatView').style.display = '';
+    }
+
+    function populateProfilePage() {
+      const name = currentUser?.name || 'User';
+      const email = currentUser?.email || 'Not signed in';
+      const tier = userState.tier || 'free';
+      const isCloud = currentUser?.isCloud || false;
+      const isGuest = currentUser?.isGuest || false;
+
+      // Avatar
+      const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0, 2) || '?';
+      document.getElementById('profileAvatar').textContent = initials;
+      document.getElementById('profileAvatar').className = `w-16 h-16 rounded-2xl ${tier === 'pro' ? 'bg-blue-600' : 'bg-slate-600'} text-white flex items-center justify-center text-2xl font-bold shrink-0`;
+
+      // Name & email
+      document.getElementById('profileDisplayName').textContent = name;
+      document.getElementById('profileEmail').textContent = email;
+
+      // Tier badge
+      const badge = document.getElementById('profileTierBadge');
+      if (tier === 'pro') {
+        badge.textContent = '⭐ Pro';
+        badge.className = 'text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-700 uppercase tracking-wider';
+      } else {
+        badge.textContent = 'Free';
+        badge.className = 'text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 uppercase tracking-wider';
+      }
+
+      // Account type
+      const acctType = document.getElementById('profileAccountType');
+      if (isGuest) { acctType.textContent = 'Guest'; acctType.className = 'text-[10px] font-medium px-2 py-0.5 rounded-full bg-amber-50 text-amber-600 border border-amber-100'; }
+      else if (isCloud) { acctType.textContent = 'Cloud'; acctType.className = 'text-[10px] font-medium px-2 py-0.5 rounded-full bg-blue-50 text-blue-600 border border-blue-100'; }
+      else { acctType.textContent = 'Local'; acctType.className = 'text-[10px] font-medium px-2 py-0.5 rounded-full bg-slate-50 text-slate-500 border border-slate-200'; }
+
+      // Learning profile
+      const profile = userState.profile || {};
+      document.getElementById('profileExperience').textContent = profile.experience || 'Not set';
+      document.getElementById('profileLearningStyle').textContent = profile.learningStyle || 'Not set';
+      document.getElementById('profileTools').textContent = (profile.tools && profile.tools.length) ? profile.tools.join(', ') : 'None';
+      document.getElementById('profileGoals').textContent = (profile.goals && profile.goals.length) ? profile.goals.join(', ') : 'Not set';
+
+      // Account stats
+      const chats = userState.chats || [];
+      document.getElementById('profileTotalChats').textContent = chats.length;
+      const totalMsgs = chats.reduce((sum, c) => sum + (c.messages ? c.messages.length : 0), 0);
+      document.getElementById('profileTotalMessages').textContent = totalMsgs;
+
+      // Skills count (lessons completed)
+      const lessonsDone = Object.keys(userState.lessonProgress || {}).length;
+      document.getElementById('profileSkillsCount').textContent = lessonsDone;
+
+      // Facts learned (from Mem0 or local memory)
+      const factsCount = (userState.memory || []).length;
+      document.getElementById('profileLearnedFacts').textContent = factsCount;
+    }
+
+    // ---------------------------------------------------------
+    // USAGE PAGE
+    // ---------------------------------------------------------
+    function openUsagePage() {
+      hideAllPageViews();
+      document.getElementById('usagePageView').classList.remove('hidden');
+      populateUsagePage();
+    }
+
+    function closeUsagePage() {
+      document.getElementById('usagePageView').classList.add('hidden');
+      document.getElementById('chatView').classList.remove('hidden');
+      document.getElementById('chatView').style.display = '';
+    }
+
+    // ---------------------------------------------------------
+    // CHAT HISTORY PAGE
+    // ---------------------------------------------------------
+    function openChatHistoryPage() {
+      hideAllPageViews();
+      document.getElementById('chatHistoryPageView').classList.remove('hidden');
+      document.getElementById('chatHistorySearch').value = '';
+      renderChatHistoryPage();
+    }
+
+    function closeChatHistoryPage() {
+      document.getElementById('chatHistoryPageView').classList.add('hidden');
+      document.getElementById('chatView').classList.remove('hidden');
+      document.getElementById('chatView').style.display = '';
+    }
+
+    function renderChatHistoryPage(filter) {
+      const list = document.getElementById('chatHistoryPageList');
+      let chats = userState.chats || [];
+
+      if (filter) {
+        const q = filter.toLowerCase();
+        chats = chats.filter(c => (c.title || '').toLowerCase().includes(q) || (c.messages || []).some(m => (m.content || '').toLowerCase().includes(q)));
+      }
+
+      if (!chats.length) {
+        list.innerHTML = `<div class="text-center py-12 space-y-2">
+          <div class="text-3xl">💬</div>
+          <p class="text-sm font-medium text-slate-500">${filter ? 'No matching chats' : 'No chats yet'}</p>
+          <p class="text-xs text-slate-400">${filter ? 'Try a different search term.' : 'Start a conversation with Trinity!'}</p>
+        </div>`;
+        return;
+      }
+
+      list.innerHTML = chats.map(chat => {
+        const msgCount = (chat.messages || []).length;
+        const lastMsg = chat.messages && chat.messages.length ? chat.messages[chat.messages.length - 1] : null;
+        const preview = lastMsg ? (lastMsg.content || '').slice(0, 60) + ((lastMsg.content || '').length > 60 ? '...' : '') : 'Empty chat';
+        const timeStr = lastMsg && lastMsg.time ? formatChatTime(lastMsg.time) : '';
+        const isActive = chat.id === activeChatId;
+
+        return `<div class="group rounded-xl border ${isActive ? 'border-blue-200 bg-blue-50/50' : 'border-slate-100 hover:border-slate-200 hover:bg-slate-50'} p-3 transition">
+          <div class="flex items-start justify-between gap-2">
+            <div class="flex-1 min-w-0 cursor-pointer" onclick="loadChat('${chat.id}'); closeChatHistoryPage();">
+              <div class="flex items-center gap-2">
+                <h4 id="chatTitle_${chat.id}" class="text-xs font-semibold ${isActive ? 'text-blue-700' : 'text-slate-800'} truncate">${escapeHtml(chat.title)}</h4>
+                ${isActive ? '<span class="shrink-0 text-[9px] font-bold px-1.5 py-0.5 rounded-full bg-blue-100 text-blue-600 uppercase">Active</span>' : ''}
+              </div>
+              <p class="text-[11px] text-slate-400 mt-0.5 truncate">${escapeHtml(preview)}</p>
+            </div>
+            <div class="flex items-center gap-0.5 shrink-0 opacity-0 group-hover:opacity-100 transition">
+              <button onclick="renameChatPrompt('${chat.id}')" class="p-1.5 rounded-lg text-slate-400 hover:text-blue-600 hover:bg-blue-50 transition cursor-pointer" title="Rename">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>
+              </button>
+              <button onclick="deleteChatFromHistory('${chat.id}')" class="p-1.5 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 transition cursor-pointer" title="Delete">
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+              </button>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 mt-2 text-[10px] text-slate-400">
+            <span>${msgCount} message${msgCount !== 1 ? 's' : ''}</span>
+            ${timeStr ? '<span>· ' + timeStr + '</span>' : ''}
+          </div>
+        </div>`;
+      }).join('');
+    }
+
+    function filterChatHistoryPage() {
+      const q = document.getElementById('chatHistorySearch').value.trim();
+      renderChatHistoryPage(q || null);
+    }
+
+    function formatChatTime(timeVal) {
+      try {
+        const d = new Date(timeVal);
+        const now = new Date();
+        const diff = now - d;
+        if (diff < 60000) return 'Just now';
+        if (diff < 3600000) return Math.floor(diff / 60000) + 'm ago';
+        if (diff < 86400000) return Math.floor(diff / 3600000) + 'h ago';
+        if (diff < 604800000) return Math.floor(diff / 86400000) + 'd ago';
+        return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+      } catch(e) { return ''; }
+    }
+
+    function renameChatPrompt(chatId) {
+      const chat = userState.chats.find(c => c.id === chatId);
+      if (!chat) return;
+      const newName = prompt('Rename chat:', chat.title);
+      if (newName !== null && newName.trim()) {
+        chat.title = newName.trim();
+        persistWorkspaceState();
+        renderChatHistoryPage();
+        renderChatHistory();
+        // Update header if this is the active chat
+        if (chatId === activeChatId) {
+          document.getElementById('currentChatTitle').textContent = chat.title;
+        }
+      }
+    }
+
+    function deleteChatFromHistory(chatId) {
+      if (!confirm('Delete this chat? This cannot be undone.')) return;
+      userState.chats = userState.chats.filter(c => c.id !== chatId);
+      if (activeChatId === chatId) startNewChat(true);
+      persistWorkspaceState();
+      renderChatHistoryPage();
+      renderChatHistory();
+    }
+
+    function populateUsagePage() {
+      const credits = getCreditState();
+      const tier = credits.tier || 'free';
+      const used = credits.used || 0;
+      const max = credits.dailyMax || (tier === 'pro' ? 200 : 70);
+      const pct = Math.min(100, Math.round((used / max) * 100));
+
+      // Tier label
+      const tierLabel = document.getElementById('usageTierLabel');
+      if (tier === 'pro') {
+        tierLabel.textContent = '⭐ Pro';
+        tierLabel.className = 'text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-700 uppercase tracking-wider';
+      } else {
+        tierLabel.textContent = 'Free';
+        tierLabel.className = 'text-[10px] font-bold px-2.5 py-0.5 rounded-full bg-slate-100 text-slate-600 uppercase tracking-wider';
+      }
+
+      // Credits bar
+      document.getElementById('usageCreditsUsed').textContent = `${used} / ${max}`;
+      const bar = document.getElementById('usageCreditBar');
+      bar.style.width = pct + '%';
+      bar.className = `h-full rounded-full transition-all ${pct > 85 ? 'bg-red-500' : pct > 60 ? 'bg-amber-500' : 'bg-blue-500'}`;
+      document.getElementById('usageCreditsMax').textContent = `${max} daily limit`;
+
+      // Upgrade button visibility
+      const upgradeBtn = document.getElementById('usageUpgradeBtn');
+      if (upgradeBtn) upgradeBtn.style.display = tier === 'pro' ? 'none' : '';
+
+      // Recent activity
+      const actDiv = document.getElementById('usageRecentActivity');
+      const chats = userState.chats || [];
+      const today = new Date().toDateString();
+      const todayChats = chats.filter(c => {
+        if (!c.messages || !c.messages.length) return false;
+        const lastMsg = c.messages[c.messages.length - 1];
+        return lastMsg.time && new Date(lastMsg.time).toDateString() === today;
+      });
+
+      if (todayChats.length === 0) {
+        actDiv.innerHTML = '<p class="text-xs text-slate-400 italic">No activity yet today.</p>';
+      } else {
+        actDiv.innerHTML = todayChats.slice(-5).reverse().map(c => {
+          const title = c.title || c.messages?.[0]?.content?.slice(0, 40) || 'Chat';
+          const msgCount = c.messages?.length || 0;
+          return `<div class="flex items-center justify-between py-1.5 border-b border-slate-50">
+            <span class="text-xs text-slate-700 truncate max-w-[200px]">${title}</span>
+            <span class="text-[11px] text-slate-400">${msgCount} msgs</span>
+          </div>`;
+        }).join('');
+      }
     }
 
     function updateLessonProgressBadge() {
