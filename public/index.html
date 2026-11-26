@@ -102,6 +102,8 @@
       transform-origin: 24px 24px;
       animation: trinityCorePulse 1.6s ease-in-out infinite;
     }
+    .prose-content { overflow-x: hidden; word-break: break-word; }
+    .prose-content pre, .prose-content code { max-width: 100%; }
     .streaming-cursor {
       display: inline-block;
       width: 2px;
@@ -3782,7 +3784,7 @@ Rules for image generation:
       const fence = '`' + '`' + '`';
       const codeBlockRegex = new RegExp(fence + '(\\w*)\\n([\\s\\S]*?)' + fence, 'g');
       escaped = escaped.replace(codeBlockRegex, (_, lang, code) => {
-        return `<pre class="p-3.5 rounded-xl bg-slate-900 text-slate-100 text-xs overflow-x-auto my-2"><code>${code}</code></pre>`;
+        return `<pre class="p-3.5 rounded-xl bg-slate-900 text-slate-100 text-xs my-2" style="white-space:pre-wrap;word-break:break-word;overflow-x:hidden;"><code>${code}</code></pre>`;
       });
       escaped = escaped.replace(/`([^`]+)`/g, '<code class="px-1.5 py-0.5 rounded bg-slate-100 text-blue-700 text-xs">$1</code>');
       escaped = escaped.replace(/\*\*([^*]+)\*\*/g, '<strong class="font-semibold text-slate-900">$1</strong>');
